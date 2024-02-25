@@ -1,0 +1,22 @@
+---
+import Form from './Settings/Form'
+---
+
+<section>
+  <h2>Settings</h2>
+
+  <Form client:load />
+</section>
+
+<style>
+  section {
+    max-width: 600px;
+  }
+</style>
+
+<style is:global>
+  form#settings-form {
+    display: flex;
+    flex-direction: column;
+  }
+</style>

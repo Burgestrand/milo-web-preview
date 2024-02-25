@@ -10,8 +10,15 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/react": "^3.0.10",
+    "@nanostores/react": "^0.7.2",
+    "@types/react": "^18.2.58",
+    "@types/react-dom": "^18.2.19",
     "astro": "^4.4.4",
+    "nanostores": "^0.10.0",
     "obj2gltf": "^3.1.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "three": "^0.161.0"
   }
 }

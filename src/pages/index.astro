@@ -1,74 +1,33 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../layouts/Layout.astro'
+
+import Viewer from '../components/Renderer.astro'
+import Settings from '@components/Settings.astro'
 ---
 
 <Layout title="Welcome to Astro.">
 	<main>
+		<Settings />
+		<Viewer />
 	</main>
 </Layout>
-
-<script>
-	import * as THREE from 'three'
-	import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-	import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-
-	const main = document.querySelector("main")
-	const width = main.scrollWidth - 20
-	const height = main.scrollHeight - 20
-	const ratio = width / height
-
-	const scene = new THREE.Scene();
-	const camera = new THREE.PerspectiveCamera(75, ratio, 0.1, 1000);
-	const loader = new GLTFLoader()
-
-	const renderer = new THREE.WebGLRenderer();
-	renderer.setSize(width, height);
-	main.appendChild(renderer.domElement)
-
-	const controls = new OrbitControls(camera, renderer.domElement)
-
-	const light = new THREE.HemisphereLight( 0xffffbb, 0xffff00, 1 );
-	scene.add( light );
-
-	const pointLight = new THREE.PointLight(0xffffff, 1);
-	pointLight.position.set(5, 5, 5);
-	scene.add(pointLight);
-
-	camera.position.z = 0.5
-	camera.position.y = 0
-	camera.position.x = 0
-	camera.lookAt(0, 0, 0)
-
-	loader.load("/milo.glb", function(gltf) {
-		console.debug("loaded!", gltf)
-		scene.add(gltf.scene);
-	}, undefined, function(error) {
-		console.error(error)
-	})
-
-	function animate() {
-		requestAnimationFrame(animate);
-		controls.update()
-		renderer.render(scene, camera);
-	}
-
-	animate()
-</script>
 
 <style>
 	main {
 		margin: 1rem auto;
 		padding: 10px;
-		width: 800px;
-		height: 800px;
-		font-size: 20px;
+		max-width: 1024px;
 		line-height: 1.6;
 		background: white;
-		box-sizing: border-box;
+
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
 	}
 
-	canvas {
-		border: 4px solid orange;
-		outline: 4px solid orange;
+	aside {
+		display: flex;
+		gap: 2rem;
 	}
 </style>
+../components/Settings/Settings../components/Settings/Form
