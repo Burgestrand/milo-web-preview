@@ -1,0 +1,17 @@
+{
+  "name": "milo-web-preview",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^4.4.4",
+    "obj2gltf": "^3.1.6",
+    "three": "^0.161.0"
+  }
+}
