@@ -1,7 +1,7 @@
 {
   "extends": "astro/tsconfigs/base",
   "compilerOptions": {
-    "baseUrl": "/Users/kim/Projects/milo-web-preview",
+    "baseUrl": ".",
     "paths": {
       "@config/*": [
         "src/config/*"
