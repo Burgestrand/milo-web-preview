@@ -60,7 +60,7 @@
 	scene.environment = pmremGenerator.fromScene(environment).texture;
 
 	const loader = new GLTFLoader()
-	loader.load("/milo.glb", async function(gltf) {
+	loader.load("./milo.glb", async function(gltf) {
 		console.group("Milo.glb")
 		console.debug({ gltf })
 
