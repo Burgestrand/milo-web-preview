@@ -4,13 +4,13 @@
     "baseUrl": ".",
     "paths": {
       "@config/*": [
-        "src/config/*"
+        "src/lib/config/*"
       ],
       "@components/*": [
         "src/components/*"
       ],
       "@stores/*": [
-        "src/stores/*"
+        "src/lib/stores/*"
       ]
     },
     "jsx": "react-jsx",

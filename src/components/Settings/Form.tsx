@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useStore } from '@nanostores/react'
-import { colors as colorsStore } from '@stores/settings.ts'
-import { filaments } from '@config/filaments'
+import { colors as colorsStore } from 'src/lib/stores/settings'
+import { filaments } from 'src/lib/config/filaments'
 
 function FilamentSelect(props) {
   return (
