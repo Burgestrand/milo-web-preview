@@ -1,9 +1,10 @@
 import { useCallback } from 'react'
 import { useStore } from '@nanostores/react'
-import { colors as colorsStore } from 'src/lib/stores/settings'
-import { filaments } from 'src/lib/config/filaments'
+import { colors as colorsStore } from '@stores/settings'
+import { filaments } from '@config/filaments'
 
 function FilamentSelect(props) {
+  console.debug(props, filaments)
   return (
     <select {...props}>
       {filaments.map(({ id, name }) =>
@@ -15,20 +16,18 @@ function FilamentSelect(props) {
 
 export default function Settings() {
   const $colors = useStore(colorsStore)
+  console.debug($colors)
 
   const handleColorChange = useCallback((event) => {
-    const filament = filaments.find(({ id }) => id === event.target.value)
-    colorsStore.setKey(event.target.name, filament)
+    colorsStore.setKey(event.target.name, event.target.value)
   }, [colorsStore])
-
-  console.debug({ $colors })
 
   return (
     <form id="settings-form">
       {Object.entries($colors).map(([name, value]) => (
         <label key={name}>
           <span>{name}</span>
-          <FilamentSelect name={name} value={value.id} onChange={handleColorChange} />
+          <FilamentSelect name={name} value={value} onChange={handleColorChange} />
         </label>
       ))}
     </form>

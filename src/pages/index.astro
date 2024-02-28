@@ -1,14 +1,18 @@
 ---
-import Layout from '../layouts/Layout.astro'
+import Layout from '@layouts/Layout.astro'
 
-import Viewer from '../components/Renderer.astro'
+import Renderer from '@components/Renderer.astro'
 import Settings from '@components/Settings.astro'
 ---
 
-<Layout title="Welcome to Astro.">
+<Layout title="Milo v1.5 - Color Preview">
 	<main>
-		<Settings />
-		<Viewer />
+		<section>
+			<Settings />
+		</section>
+		<section>
+			<Renderer />
+		</section>
 	</main>
 </Layout>
 
@@ -25,9 +29,7 @@ import Settings from '@components/Settings.astro'
 		gap: 2rem;
 	}
 
-	aside {
+	section {
 		display: flex;
-		gap: 2rem;
 	}
 </style>
-../components/Settings/Settings../components/Settings/Form
