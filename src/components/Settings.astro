@@ -2,11 +2,9 @@
 import Form from './Settings/Form'
 ---
 
-<section>
-  <h2>Settings</h2>
+<h2>Settings</h2>
 
-  <Form client:load />
-</section>
+<Form client:only="react" />
 
 <style>
   section {

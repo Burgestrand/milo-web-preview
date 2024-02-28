@@ -1,34 +1,28 @@
 import { useCallback } from 'react'
 import { useStore } from '@nanostores/react'
-import { colors as colorsStore } from 'src/lib/stores/settings'
-import { filaments } from 'src/lib/config/filaments'
+import type { Color } from '@stores/settings'
+import { colors as colorsStore, setColor } from '@stores/settings'
+import type { ID as FilamentID } from '@config/filaments'
+import { filaments, findById } from '@config/filaments'
 
-function FilamentSelect(props) {
-  return (
-    <select {...props}>
-      {filaments.map(({ id, name }) =>
-        <option key={id} value={id}>{name}</option>
-      )}
-    </select>
-  )
-}
-
-export default function Settings() {
+export default function Form() {
   const $colors = useStore(colorsStore)
 
-  const handleColorChange = useCallback((event) => {
-    const filament = filaments.find(({ id }) => id === event.target.value)
-    colorsStore.setKey(event.target.name, filament)
-  }, [colorsStore])
-
-  console.debug({ $colors })
+  const handleColorChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
+    const filament = findById(event.target.value as FilamentID)
+    setColor(event.target.name as Color, filament)
+  }, [])
 
   return (
     <form id="settings-form">
-      {Object.entries($colors).map(([name, value]) => (
+      {Object.entries($colors).map(([name, filament]) => (
         <label key={name}>
-          <span>{name}</span>
-          <FilamentSelect name={name} value={value.id} onChange={handleColorChange} />
+          <span>{name} ({filament.id})</span>
+          <select name={name} value={filament.id} onChange={handleColorChange}>
+            {filaments.map(({ id, name }) =>
+              <option key={id} value={id}>{name}</option>
+            )}
+          </select>
         </label>
       ))}
     </form>
