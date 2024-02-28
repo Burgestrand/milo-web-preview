@@ -6,5 +6,5 @@ import react from "@astrojs/react";
 export default defineConfig({
   integrations: [react()],
   site: 'https://burgestrand.github.io',
-  base: '/milo-web-preview',
+  base: '/milo-web-preview/',
 });
