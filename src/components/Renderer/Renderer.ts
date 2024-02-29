@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 
-import type { Printable } from '@config/printables'
+import type { Printable, Color } from '@config/printables'
 import printables from '@config/printables'
 import { colors as colorStore } from '@stores/settings.ts'
 import * as filaments from '@config/filaments'
@@ -25,6 +25,8 @@ export default class Renderer {
     })
     this.renderer.outputColorSpace = THREE.SRGBColorSpace
     this.renderer.setPixelRatio(window.devicePixelRatio)
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping
+    this.renderer.toneMappingExposure = 1.0
 
     this.scene = new THREE.Scene()
     this.scene.background = new THREE.Color(0x000000)
@@ -50,6 +52,12 @@ export default class Renderer {
     const aspectRatio = width / height
     this.camera.aspect = aspectRatio
     this.camera.updateProjectionMatrix()
+  }
+
+  #dig(root, path) {
+    return path.slice(1).reduce((nodes, segment) =>
+      nodes.flatMap(node => node.children.filter(node => node.name === segment))
+  , [root])
   }
 
   async start() {
@@ -88,48 +96,79 @@ export default class Renderer {
         }
     })
 
-    const printablesByName = new Map(printables.map(printable => [printable.name, printable]))
+    const printablesByRoot = printables.reduce((tree, printable) => {
+      const segment = printable.path[0]
+      const list = tree.get(segment) || []
+      list.push(printable)
+      return tree.set(segment, list)
+    }, new Map<string, Printable[]>())
     const nodesByPrintable = new Map(printables.map(printable => [printable, []]))
 
     const model = gltf.scene
 
     // Find all nodes for each printable.
     console.time("Finding nodes for printables")
-    model.traverse((node) => {
-      const printable = printablesByName.get(node.name)
-      if (printable === undefined) {
+    model.traverseVisible((node) => {
+      const candidates = printablesByRoot.get(node.name)
+      if (candidates === undefined) {
         return
       }
 
-      nodesByPrintable.get(printable).push(node)
+      const nodes = candidates.flatMap((printable) => {
+        const leaves = this.#dig(node, printable.path)
+        if (leaves.length !== 1) console.warn("Weird leaves", printable, leaves)
+
+        return { printable, nodes: leaves }
+      })
+
+      if (nodes.length === 0) {
+        console.error(`No matches found for ${node.name}`, candidates, node)
+      } else if (nodes.length > 1) {
+        console.warn(`Multiple matches found for ${node.name}`, candidates, node, nodes)
+      }
+
+      nodes.forEach(({ printable, nodes }) => {
+        nodesByPrintable.get(printable).push(...nodes)
+      })
     })
     console.timeEnd("Finding nodes for printables")
 
     // Double-check 1-to-1 mapping of printables to nodes.
     nodesByPrintable.forEach((nodes, printable) => {
       if (nodes.length === 0) {
-        console.warn(`No nodes found for ${printable.name}`)
+        console.warn(`No nodes found for ${printable.path}`)
       } else if (nodes.length > 1) {
-        console.warn(`Multiple nodes found for ${printable.name}`)
+        console.warn(`Multiple nodes found for ${printable.path}`)
       }
     })
 
-    console.time("Painting all printables")
-    const nodesByColor = [...nodesByPrintable.entries()].reduce((map, [printable, newNodes]) => {
-      const color = printable.color
-      const nodes = map.get(color) || []
-      map.set(color, nodes.concat(newNodes))
-      return map
-    }, new Map<Printable["color"], THREE.Object3D[]>())
+    console.time("Following all instructions")
+    const nodesByColor = new Map<Color, THREE.Object3D[]>()
+    for (const [printable, nodes] of nodesByPrintable.entries()) {
+      switch (printable.instruction.type) {
+        case "hide":
+          nodes.forEach(node => node.visible = false)
+          break
+        case "print":
+            // no-op
+          const color = printable.instruction.color
+          const stored = nodesByColor.get(color) || []
+          nodesByColor.set(color, stored.concat(nodes))
+          break
+      }
+    }
+    console.timeEnd("Following all instructions")
 
+    console.time("Painting all printables")
     colorStore.subscribe((colorToFilament) => {
       nodesByColor.forEach((nodes, color) => {
         const filament = colorToFilament[color]
 
         nodes.forEach((node) => {
           node.children.forEach((child) => {
-            if (child.isMesh) {
-              child.material = filament.material
+            if (child.type === "Mesh") {
+              const mesh = child as THREE.Mesh
+              mesh.material = filament.material
             }
           })
         })

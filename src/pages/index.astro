@@ -8,10 +8,10 @@ import Settings from '@components/Settings.astro'
 <Layout title="Milo v1.5 - Color Preview">
 	<main>
 		<section>
-			<Settings />
+			<Renderer />
 		</section>
 		<section>
-			<Renderer />
+			<Settings />
 		</section>
 	</main>
 </Layout>
@@ -31,5 +31,6 @@ import Settings from '@components/Settings.astro'
 
 	section {
 		display: flex;
+		flex-direction: column;
 	}
 </style>

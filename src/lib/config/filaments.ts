@@ -88,7 +88,7 @@ export const white: Filament = {
   id: "white",
   name: "Generic White",
   material: new THREE.MeshStandardMaterial({
-    color: 0xFFFFFF,
+    color: 0xd0d0d0, // White
     roughness: 0.4,
     metalness: 0.2,
     userData: { filament: "white" }
@@ -99,7 +99,7 @@ export const black: Filament = {
   id: "black",
   name: "Generic Black",
   material: new THREE.MeshPhysicalMaterial({
-    color: 0x000000,
+    color: 0x222222,
     roughness: 0.8,
     metalness: 0.05,
     clearcoat: 0.0,
