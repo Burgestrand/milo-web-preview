@@ -6,7 +6,7 @@ import * as filaments from '@config/filaments'
 import type { Printable } from '@config/printables'
 
 export type { Filament }
-export type Color = Printable["color"]
+export type { Color } from '@config/printables'
 
 class FilamentEncoder implements PersistentEncoder<Filament> {
   encode(value: Filament) {
@@ -17,14 +17,17 @@ class FilamentEncoder implements PersistentEncoder<Filament> {
     try {
       return filaments.findById(value as Filament["id"])
     } catch (error) {
-      console.error("FilamentEncoder#decode", value, error)
       return filaments.white
     }
   }
 }
 
+export const printables = persistentMap<Record<Printable, Filament>>("printables:", {})
+
 export const colors = persistentMap<Record<Color, Filament>>("colors:", {
   primary: filaments.black,
+  secondary: filaments.black,
+  tertiary: filaments.black,
   accent: filaments.blue,
   tpu: filaments.turqoise
 }, new FilamentEncoder())

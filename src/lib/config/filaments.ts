@@ -22,13 +22,10 @@ export const neonGreen: Filament = {
 export const neonOrange: Filament = {
   id: "neonOrange",
   name: "DuraPro ASA Neon Orange",
-  material: new THREE.MeshPhysicalMaterial({
-    color: 0xFFA500, // Neon Orange
-    roughness: 0.4,
-    metalness: 0.2,
-    clearcoat: 1.0,
-    clearcoatRoughness: 0.1,
-    sheen: 0.5,
+  material: new THREE.MeshStandardMaterial({
+    color: 0xFF8500, // Neon Orange
+    roughness: 0.7,
+    metalness: 0.1,
     userData: { filament: "neonOrange" }
   })
 }
@@ -49,13 +46,10 @@ export const neonPink: Filament = {
 export const neonYellow: Filament = {
   id: "neonYellow",
   name: "DuraPro ASA Neon Yellow",
-  material: new THREE.MeshPhysicalMaterial({
-    color: 0xFFFF00, // Neon Yellow
-    roughness: 0.4,
+  material: new THREE.MeshStandardMaterial({
+    color: 0xDDFF00, // Neon Yellow
+    roughness: 0.9,
     metalness: 0.05,
-    clearcoat: 0.0, // Adds a clear coat layer for additional sheen, typical for car paint or polished surfaces
-    clearcoatRoughness: 0.5, // The roughness of the clear coat layer
-    sheen: 0.5, // Simulates the sheen phenomenon of fabrics
     userData: { filament: "neonYellow" }
   })
 }
@@ -73,6 +67,28 @@ export const blue: Filament = {
   })
 }
 
+export const red: Filament = {
+  id: "red",
+  name: "Generic Red",
+  material: new THREE.MeshStandardMaterial({
+    color: 0xff5555,
+    roughness: 0.4,
+    metalness: 0.2,
+    userData: { filament: "red" }
+  })
+}
+
+export const lightBlue: Filament = {
+  id: "lightBlue",
+  name: "Generic Light Blue",
+  material: new THREE.MeshStandardMaterial({
+    color: 0x66aaff,
+    roughness: 0.4,
+    metalness: 0.2,
+    userData: { filament: "lightBlue" }
+  })
+}
+
 export const turqoise: Filament = {
   id: "turqoise",
   name: "Generic Turqoise",
@@ -84,11 +100,22 @@ export const turqoise: Filament = {
   })
 }
 
+export const purple: Filament = {
+  id: "purple",
+  name: "Generic Purple",
+  material: new THREE.MeshStandardMaterial({
+    color: 0x703A92,
+    roughness: 0.4,
+    metalness: 0.2,
+    userData: { filament: "purple" }
+  })
+}
+
 export const white: Filament = {
   id: "white",
   name: "Generic White",
   material: new THREE.MeshStandardMaterial({
-    color: 0xd0d0d0, // White
+    color: 0xeeeeee, // White
     roughness: 0.4,
     metalness: 0.2,
     userData: { filament: "white" }
@@ -99,7 +126,7 @@ export const black: Filament = {
   id: "black",
   name: "Generic Black",
   material: new THREE.MeshPhysicalMaterial({
-    color: 0x222222,
+    color: 0x444444,
     roughness: 0.8,
     metalness: 0.05,
     clearcoat: 0.0,
@@ -107,16 +134,6 @@ export const black: Filament = {
     userData: { filament: "black" }
   })
 }
-
-export type ID =
-  "turqoise" |
-  "neonGreen" |
-  "neonOrange" |
-  "neonPink" |
-  "neonYellow" |
-  "blue" |
-  "white" |
-  "black"
 
 export const filaments: Filament[] = [
   neonGreen,
@@ -126,8 +143,25 @@ export const filaments: Filament[] = [
   blue,
   turqoise,
   white,
-  black
+  black,
+  purple,
+  lightBlue,
+  red
 ]
+
+// TODO: Automatic
+export type ID =
+  "turqoise" |
+  "neonGreen" |
+  "neonOrange" |
+  "neonPink" |
+  "neonYellow" |
+  "blue" |
+  "white" |
+  "purple" |
+  "lightBlue" |
+  "red" |
+  "black"
 
 export function findById(id: ID): Filament {
   const filament = filaments.find(filament => filament.id === id)
