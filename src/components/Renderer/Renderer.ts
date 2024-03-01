@@ -26,7 +26,7 @@ export default class Renderer {
     this.renderer.outputColorSpace = THREE.SRGBColorSpace
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping
-    this.renderer.toneMappingExposure = 1.0
+    this.renderer.toneMappingExposure = 0.5
 
     this.scene = new THREE.Scene()
     this.scene.background = new THREE.Color(0x000000)
