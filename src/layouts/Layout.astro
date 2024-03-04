@@ -7,7 +7,7 @@ const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="bg-shark-950">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="description" content="Astro description" />
@@ -20,36 +20,23 @@ const { title } = Astro.props;
 		<slot />
 	</body>
 </html>
-<style is:global>
-	:root {
-		--accent: 136, 58, 234;
-		--accent-light: 224, 204, 250;
-		--accent-dark: 49, 10, 101;
-		--accent-gradient: linear-gradient(
-			45deg,
-			rgb(var(--accent)),
-			rgb(var(--accent-light)) 30%,
-			white 60%
-		);
-	}
-	html {
-		font-family: system-ui, sans-serif;
-		background: #13151a;
-		background-size: 224px;
-	}
-	code {
-		font-family:
-			Menlo,
-			Monaco,
-			Lucida Console,
-			Liberation Mono,
-			DejaVu Sans Mono,
-			Bitstream Vera Sans Mono,
-			Courier New,
-			monospace;
-	}
 
-	* {
-		box-sizing: border-box;
+<style>
+	body {
+		--gap: clamp(1rem, 6vw, 3rem);
+		--full: minmax(var(--gap), 1fr);
+		--content: min(50ch, 100% - var(--gap) * 2);
+		--popout: minmax(0, 5rem);
+		--feature: minmax(0, 14rem);
+
+		display: grid;
+		grid-template-columns:
+			[full-start] var(--full)
+				[feature-start] var(--feature)
+					[popout-start] var(--popout)
+						[content-start] var(--content) [content-end]
+					var(--popout) [popout-end]
+				var(--feature) [feature-end]
+			var(--full) [full-end];
 	}
 </style>

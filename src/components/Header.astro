@@ -1,0 +1,17 @@
+---
+import { Image } from 'astro:assets';
+import GitHub from "./Header/github-mark/github-mark-white.svg"
+---
+
+<header class="col-[full] grid grid-cols-subgrid min-h-10 text-shark-800 bg-accent border-b-4 border-current">
+  <nav class="col-[feature] flex flex-row justify-end">
+    <ul class="flex flex-row gap-4 justify-end bg-current mr-4 place-items-center *:px-4 *:py-2">
+      <li>
+        <a href="https://github.com/Burgestrand/milo-web-preview" class="flex flex-row gap-2 place-items-center text-white">
+          <Image src={GitHub} alt="GitHub" class="size-6" />
+          <span>Source Code</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>

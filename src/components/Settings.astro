@@ -2,19 +2,6 @@
 import Form from './Settings/Form'
 ---
 
-<h2>Settings</h2>
-
-<Form client:only="react" />
-
-<style>
-  section {
-    max-width: 600px;
-  }
-</style>
-
-<style is:global>
-  form#settings-form {
-    display: flex;
-    flex-direction: column;
-  }
-</style>
+<aside class="col-[feature] bg-accent">
+  <Form client:only="react" />
+</aside>

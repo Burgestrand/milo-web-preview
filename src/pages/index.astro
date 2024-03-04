@@ -3,34 +3,18 @@ import Layout from '@layouts/Layout.astro'
 
 import Renderer from '@components/Renderer.astro'
 import Settings from '@components/Settings.astro'
+import Header from '@components/Header.astro'
 ---
 
 <Layout title="Milo v1.5 - Color Preview">
-	<main>
-		<section>
+	<Header />
+
+	<main class="col-[full] grid grid-cols-subgrid">
+		<section class="col-[full] grid grid-cols-subgrid">
 			<Renderer />
 		</section>
-		<section>
+		<section class="col-[full] grid grid-cols-subgrid">
 			<Settings />
 		</section>
 	</main>
 </Layout>
-
-<style>
-	main {
-		margin: 1rem auto;
-		padding: 10px;
-		max-width: 1024px;
-		line-height: 1.6;
-		background: white;
-
-		display: flex;
-		flex-direction: column;
-		gap: 2rem;
-	}
-
-	section {
-		display: flex;
-		flex-direction: column;
-	}
-</style>
