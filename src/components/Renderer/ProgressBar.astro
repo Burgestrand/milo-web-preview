@@ -4,8 +4,8 @@ export interface IProgressBar extends HTMLElement {
 }
 ---
 
-<progress-bar>
-  <div class="inline-flex w-full h-4 bg-white border-2 rounded-xl overflow-clip" data-background>
+<progress-bar {...Astro.props}>
+  <div class="inline-flex w-full min-h-4 bg-white border-2 rounded-xl overflow-clip" data-background>
     <span class="bg-orange-500" data-progress />
   </div>
 </progress-bar>

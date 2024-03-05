@@ -2,8 +2,12 @@
 import ProgressBar from "./Renderer/ProgressBar.astro"
 ---
 
-<div class="col-[feature] bg-shark-800 p-4">
-	<ProgressBar />
+<div class="col-[feature] bg-shark-800 p-4 relative">
+	<div data-progress-overlay class="absolute inset-4 flex flex-col place-content-center place-items-center">
+		<p class="text-white mb-2">Loading model...</p>
+
+		<ProgressBar class="flex w-full max-w-xl" />
+	</div>
 
 	<canvas id="renderer-canvas" class="
 		border-2 border-shark-400
@@ -36,7 +40,7 @@ import ProgressBar from "./Renderer/ProgressBar.astro"
 	})
 
 	canvas.addEventListener("custom:loaded", ({ detail: progressEvent }: RendererProgressEvent) => {
-		progressBar.remove()
+		document.querySelector("[data-progress-overlay]").remove()
 	})
 
 	renderer.start()
