@@ -7,7 +7,8 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import type { Printable, Color } from '@config/printables'
 import printables from '@config/printables'
 import { colors as colorStore } from '@stores/settings.ts'
-import * as filaments from '@config/filaments'
+
+export type RendererProgressEvent = CustomEvent<ProgressEvent>
 
 export default class Renderer {
   model: string
@@ -75,26 +76,12 @@ export default class Renderer {
 
     const timer = `Loading ${this.model}...`
     console.time(timer)
-    const gltf = await this.#load(this.model)
+    const gltf = await this.#load(this.model, (event) => {
+      const customEvent: ProgressEvent = new CustomEvent("progress", { detail: event })
+      renderer.domElement.dispatchEvent(customEvent)
+    })
     console.debug(gltf)
     console.timeEnd(timer)
-
-    gltf.scene.traverse(function(object) {
-      if (((object as THREE.Mesh).isMesh)) {
-          const mesh = object as THREE.Mesh
-          const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-
-          materials.forEach((material: THREE.Material) => {
-            (Object.keys(material) as (keyof THREE.Material)[]).forEach((key) => {
-                const value = material[key];
-                if (value && value instanceof THREE.Texture) {
-                    value.encoding = THREE.sRGBEncoding;
-                    console.debug(mesh, material)
-                }
-            });
-          })
-        }
-    })
 
     const printablesByRoot = printables.reduce((tree, printable) => {
       const segment = printable.path[0]

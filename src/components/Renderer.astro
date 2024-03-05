@@ -1,19 +1,43 @@
 ---
+import ProgressBar from "./Renderer/ProgressBar.astro"
 ---
 
 <div class="col-[feature] bg-shark-800 p-4">
+	<ProgressBar />
+
 	<canvas id="renderer-canvas" class="
 		border-2 border-shark-400
 		box-content w-full aspect-video
-	"></canvas>
+	">
+		<p>Your browser does not support rendering the model.</p>
+	</canvas>
 </div>
 
 <script>
 	import Renderer from '@components/Renderer/Renderer'
+	import type { RendererProgressEvent } from "./Renderer/Renderer"
+	import type { IProgressBar } from "./Renderer/ProgressBar.astro"
+
+	const progressBar = document.querySelector("progress-bar") as IProgressBar
+	const canvas = document.querySelector("canvas")
 
 	const renderer = new Renderer({
 		model: "./CAD.glb",
-		canvas: document.querySelector("#renderer-canvas")
+		canvas
+	})
+
+	canvas.addEventListener("progress", ({ detail: progressEvent }: RendererProgressEvent) => {
+		if (progressEvent.lengthComputable) {
+			const progress = (progressEvent.loaded / progressEvent.total) * 100
+
+			if (progress >= 100) {
+				progressBar.remove()
+			} else {
+				progressBar.progress = progress
+			}
+		} else {
+			progressBar.progress = Math.random() * 100
+		}
 	})
 
 	renderer.start()
