@@ -26,18 +26,17 @@ import ProgressBar from "./Renderer/ProgressBar.astro"
 		canvas
 	})
 
-	canvas.addEventListener("progress", ({ detail: progressEvent }: RendererProgressEvent) => {
+	canvas.addEventListener("custom:progress", ({ detail: progressEvent }: RendererProgressEvent) => {
 		if (progressEvent.lengthComputable) {
 			const progress = (progressEvent.loaded / progressEvent.total) * 100
-
-			if (progress >= 100) {
-				progressBar.remove()
-			} else {
-				progressBar.progress = progress
-			}
+			progressBar.progress = progress
 		} else {
 			progressBar.progress = Math.random() * 100
 		}
+	})
+
+	canvas.addEventListener("custom:loaded", ({ detail: progressEvent }: RendererProgressEvent) => {
+		progressBar.remove()
 	})
 
 	renderer.start()

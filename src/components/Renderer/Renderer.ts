@@ -77,9 +77,10 @@ export default class Renderer {
     const timer = `Loading ${this.model}...`
     console.time(timer)
     const gltf = await this.#load(this.model, (event) => {
-      const customEvent: ProgressEvent = new CustomEvent("progress", { detail: event })
+      const customEvent: ProgressEvent = new CustomEvent("custom:progress", { detail: event })
       renderer.domElement.dispatchEvent(customEvent)
     })
+    renderer.domElement.dispatchEvent(new CustomEvent("custom:loaded", { detail: null }))
     console.debug(gltf)
     console.timeEnd(timer)
 
