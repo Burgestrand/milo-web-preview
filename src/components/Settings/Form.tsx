@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useStore } from '@nanostores/react'
 import type { ColorRole } from '@lib/config'
-import { colorGroups } from '@lib/config'
-import { colors as colorsStore, setColorGroup } from '@stores/settings'
+import { colorRoles } from '@lib/config'
+import { colors as colorsStore, setColorRoleFilament } from '@stores/settings'
 import type { ID as FilamentID } from '@config/filaments'
 import { filaments, findById } from '@config/filaments'
 
@@ -28,12 +28,12 @@ function Hydrated() {
 
   const handleColorChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const filament = findById(event.target.value as FilamentID)
-    setColorGroup(event.target.name as ColorRole, filament)
+    setColorRoleFilament(event.target.name as ColorRole, filament)
   }, [])
 
-  const $colorGroups = colorGroups.map((ColorRole) => ({ ColorRole, filament: $colors[ColorRole] }))
+  const $colorRoles = colorRoles.map((ColorRole) => ({ ColorRole, filament: $colors[ColorRole] }))
 
-  return $colorGroups.map(({ ColorRole, filament }) => (
+  return $colorRoles.map(({ ColorRole, filament }) => (
     <Select key={ColorRole} name={ColorRole} value={filament.id} onChange={handleColorChange}>
       {filaments.map(({ id, name }) => <option key={id} value={id}>{name}</option>)}
     </Select>
@@ -41,7 +41,7 @@ function Hydrated() {
 }
 
 function Hydrating() {
-  return colorGroups.map((ColorRole) => (
+  return colorRoles.map((ColorRole) => (
     <Select key={ColorRole} name={ColorRole} disabled>
       <option>Loading...</option>
     </Select>

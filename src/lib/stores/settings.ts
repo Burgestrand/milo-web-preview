@@ -17,6 +17,6 @@ export const colors = persistentMap<Record<ColorRole, Filament>>("colors:", {
   tpu: filaments.turqoise
 }, new FilamentEncoder())
 
-export function setColorGroup(color: ColorRole, filament: Filament) {
+export function setColorRoleFilament(color: ColorRole, filament: Filament) {
   colors.setKey(color, filament)
 }
