@@ -20,9 +20,9 @@ import ProgressBar from "./Renderer/ProgressBar.astro"
 <script>
 	import Renderer from '@components/Renderer/Renderer'
 	import type { RendererProgressEvent } from "./Renderer/Renderer"
-	import type { IProgressBar } from "./Renderer/ProgressBar.astro"
+	import ProgressBar from "./Renderer/ProgressBar/ProgressBar.ts"
 
-	const progressBar = document.querySelector("progress-bar") as IProgressBar
+	const progressBar = document.querySelector("progress-bar") as ProgressBar
 	const canvas = document.querySelector("canvas")
 
 	const renderer = new Renderer({

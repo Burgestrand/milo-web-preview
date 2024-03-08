@@ -1,7 +1,4 @@
 ---
-export interface IProgressBar extends HTMLElement {
-  progress: number
-}
 ---
 
 <progress-bar {...Astro.props}>
@@ -11,27 +8,7 @@ export interface IProgressBar extends HTMLElement {
 </progress-bar>
 
 <script>
-  class ProgressBar extends HTMLElement implements IProgressBar {
-    static observedAttributes = ["progress"]
-
-    get #bar(): HTMLElement {
-      return this.querySelector("[data-progress]")
-    }
-
-    get progress() {
-      return parseFloat(this.getAttribute("progress"))
-    }
-
-    set progress(value: number) {
-      this.setAttribute("progress", value.toFixed(0))
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-      if (name === "progress") {
-        this.#bar.style.width = `${newValue}%`
-      }
-    }
-  }
+  import ProgressBar from "./ProgressBar/ProgressBar.ts"
 
   customElements.define("progress-bar", ProgressBar)
 </script>
