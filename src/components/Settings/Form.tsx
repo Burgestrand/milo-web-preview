@@ -31,18 +31,18 @@ function Hydrated() {
     setColorRoleFilament(event.target.name as ColorRole, filament)
   }, [])
 
-  const $colorRoles = colorRoles.map((ColorRole) => ({ ColorRole, filament: $colors[ColorRole] }))
+  const $colorRoles = colorRoles.map((colorRole) => ({ colorRole, filament: $colors[colorRole] }))
 
-  return $colorRoles.map(({ ColorRole, filament }) => (
-    <Select key={ColorRole} name={ColorRole} value={filament.id} onChange={handleColorChange}>
+  return $colorRoles.map(({ colorRole, filament }) => (
+    <Select key={colorRole} name={colorRole} value={filament.id} onChange={handleColorChange}>
       {filaments.map(({ id, name }) => <option key={id} value={id}>{name}</option>)}
     </Select>
   ))
 }
 
 function Hydrating() {
-  return colorRoles.map((ColorRole) => (
-    <Select key={ColorRole} name={ColorRole} disabled>
+  return colorRoles.map((colorRole) => (
+    <Select key={colorRole} name={colorRole} disabled>
       <option>Loading...</option>
     </Select>
   ))
