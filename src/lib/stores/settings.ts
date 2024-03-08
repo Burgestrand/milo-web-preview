@@ -4,12 +4,12 @@ import type { Filament } from '@config/filaments'
 export type { Filament }
 import * as filaments from '@config/filaments'
 
-import type { Color } from '@config/printables'
-export type { Color }
+import type { ColorRole } from '@lib/config'
+export type { ColorRole }
 
 import FilamentEncoder from "./FilamentEncoder"
 
-export const colors = persistentMap<Record<Color, Filament>>("colors:", {
+export const colors = persistentMap<Record<ColorRole, Filament>>("colors:", {
   primary: filaments.black,
   secondary: filaments.black,
   tertiary: filaments.black,
@@ -17,6 +17,6 @@ export const colors = persistentMap<Record<Color, Filament>>("colors:", {
   tpu: filaments.turqoise
 }, new FilamentEncoder())
 
-export function setColor(color: Color, filament: Filament) {
+export function setColorGroup(color: ColorRole, filament: Filament) {
   colors.setKey(color, filament)
 }

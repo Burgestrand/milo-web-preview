@@ -1,7 +1,7 @@
-export type Color = "primary" | "secondary" | "tertiary" | "accent" | "tpu"
+import type { ColorRole } from "../config"
 
 export type Instruction =
-  { type: "print", color: Color } |
+  { type: "print", color: ColorRole } |
   { type: "hide" }
 
 type ObjectPath = string
@@ -83,22 +83,22 @@ printables.push({ path: ["Z_Wire_redirect_hook"], instruction: { type: "print", 
 printables.push({ path: ["Z_axis_cable_chain_backer"], instruction: { type: "print", color: "secondary" }, stl: "STL Files/Minimill Main/Cable Chain Mounts/[a} Z Axis Cable Chain Backer x1.stl" });
 
 // Table
-((stl: string, color: Color) => {
+((stl: string, color: ColorRole) => {
   printables.push({ path: ["handwheel_handle_(1)_(1)"], instruction: { type: "print", color }, stl })
   printables.push({ path: ["handwheel_handle_(1)"], instruction: { type: "print", color }, stl })
 })("STL Files/Minimill Main/Hand Wheels/Handwheel Handle x2.stl", "secondary");
 
-((stl: string, color: Color) => {
+((stl: string, color: ColorRole) => {
   printables.push({ path: ["handwheel_(1)"], instruction: { type: "print", color }, stl })
   printables.push({ path: ["handwheel"], instruction: { type: "print", color }, stl });
 })("STL Files/Minimill Main/Hand Wheels/Handwheel Body x2 .stl", "secondary");
 
-((stl: string, color: Color) => {
+((stl: string, color: ColorRole) => {
   printables.push({ path: ["X_axis_Table_support_(Centres)_(1)"], stl, instruction: { type: "print", color } })
   printables.push({ path: ["X_axis_Table_support_(Centres)"], stl, instruction: { type: "print", color } })
 })("STL Files/Minimill Main/X Axis STLs/X Axis Table Support Centre x2 .stl", "primary");
 
-((stl: string, color: Color) => {
+((stl: string, color: ColorRole) => {
   printables.push({ path: ["X_axis_Table_support_(ends)"], stl, instruction: { type: "print", color } })
   printables.push({ path: ["X_axis_Table_support_(ends)_(3)"], stl, instruction: { type: "print", color } })
   printables.push({ path: ["X_axis_Table_support_(ends)_(1)"], stl, instruction: { type: "print", color } })
@@ -106,17 +106,17 @@ printables.push({ path: ["Z_axis_cable_chain_backer"], instruction: { type: "pri
 })("STL Files/Minimill Main/X Axis STLs/X Axis Table Support Ends x4 .stl", "primary");
 
 // Misc
-((stl: string, color: Color) => {
+((stl: string, color: ColorRole) => {
   printables.push({ path: ["Table_bolt_down_(2)"], instruction: { type: "print", color }, stl })
   printables.push({ path: ["Table_bolt_down"], instruction: { type: "print", color }, stl })
 })("STL Files/Electronics Table/[a] Table Bolt Down Bracket B x2.stl", "tertiary");
 
-((stl: string, color: Color) => {
+((stl: string, color: ColorRole) => {
   printables.push({ path: ["table_Bolt_downs"], instruction: { type: "print", color }, stl })
   printables.push({ path: ["Table_bolt_down_(1)"], instruction: { type: "print", color }, stl })
 })("STL Files/Electronics Table/[a] Table Bolt Down Bracket A x2.stl", "tertiary");
 
-((stl: string, color: Color) => {
+((stl: string, color: ColorRole) => {
   printables.push({ path: ["TPU_foot"], instruction: { type: "print", color }, stl })
   printables.push({ path: ["TPU_foot_(1)"], instruction: { type: "print", color }, stl })
   printables.push({ path: ["TPU_foot_(2)"], instruction: { type: "print", color }, stl })
@@ -135,7 +135,7 @@ printables.push({ path: ["Skirt_Rear"], instruction: { type: "print", color: "te
 printables.push({ path: ["PSU_mounting_bracket_(1)_(1)"], instruction: { type: "print", color: "primary" }, stl: "STL Files/Electronics Table/PSU Mounting Bracket A x2.stl" });
 // STL Files/Electronics Table/PSU Mounting Bracket A x2.stl
 
-((stl: string, color: Color) => {
+((stl: string, color: ColorRole) => {
 printables.push({ path: ["PSU_mounting_bracket"], stl, instruction: { type: "print", color } })
 printables.push({ path: ["PSU_mounting_bracket_(1)"], stl, instruction: { type: "print", color } })
 })("STL Files/Electronics Table/PSU Mounting Bracket B x2.stl", "primary");

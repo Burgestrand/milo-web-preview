@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@lib/*": [ "src/lib/*" ],
       "@config/*": [ "src/lib/config/*" ],
       "@components/*": [ "src/components/*" ],
       "@stores/*": [ "src/lib/stores/*" ],
