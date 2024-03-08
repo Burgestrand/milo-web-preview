@@ -18,7 +18,7 @@ function Select({ name, ...props }) {
   return (
     <label className="flex-grow items-stretch flex flex-col">
       <span className="text-white font-semibold lowercase self-center" style={{ fontVariantCaps: "small-caps" }}>{titles[name]}</span>
-      <select {...props} className="text-xs rounded-md text-black" />
+      <select name={name} {...props} className="text-xs rounded-md text-black" />
     </label>
   )
 }
