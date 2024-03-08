@@ -131,7 +131,7 @@ printables.push({ path: ["Z_axis_cable_chain_backer"], instruction: instructions
   printables.push({ path: ["TPU_foot_(1)"], ...printable })
   printables.push({ path: ["TPU_foot_(2)"], ...printable })
   printables.push({ path: ["TPU_foot_(3)"], ...printable })
-})({ stl: "Electronics Table/TPU Feet x4.stl", instruction: instructions.print.tertiary });
+})({ stl: "Electronics Table/TPU Feet x4.stl", instruction: instructions.print.tpu });
 
 printables.push({ path: ["Skirt_front"], instruction: instructions.print.tertiary, stl: "Electronics Table/Skirt Front A Solid x1.stl" })
 // Electronics Table/Skirt Front A Solid x1.stl
