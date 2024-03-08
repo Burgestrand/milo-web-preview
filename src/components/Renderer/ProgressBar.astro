@@ -14,7 +14,7 @@ export interface IProgressBar extends HTMLElement {
   class ProgressBar extends HTMLElement implements IProgressBar {
     static observedAttributes = ["progress"]
 
-    get #bar() {
+    get #bar(): HTMLElement {
       return this.querySelector("[data-progress]")
     }
 
