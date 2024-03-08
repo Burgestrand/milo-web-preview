@@ -3,3 +3,11 @@ export const colorRoles = [
 ] as const
 
 export type ColorRole = typeof colorRoles[number]
+
+export const colorRoleTitles = new Map<string, string>([
+  ["primary", "Primary"],
+  ["secondary", "Secondary"],
+  ["tertiary", "Tertiary"],
+  ["accent", "Accent"],
+  ["tpu", "TPU"],
+])

@@ -2,7 +2,7 @@
 import ProgressBar from "./Renderer/ProgressBar.astro"
 ---
 
-<div class="col-[feature] bg-shark-800 p-4 relative">
+<div class="col-[feature] bg-shark-800 p-1 pb-0 relative">
 	<div data-progress-overlay class="absolute inset-4 flex flex-col place-content-center place-items-center">
 		<p class="text-white mb-2">Loading model...</p>
 
@@ -10,7 +10,7 @@ import ProgressBar from "./Renderer/ProgressBar.astro"
 	</div>
 
 	<canvas id="renderer-canvas" class="
-		border-2 border-shark-400
+		border-shark-400
 		box-content w-full aspect-video
 	">
 		<p>Your browser does not support rendering the model.</p>

@@ -1,7 +1,9 @@
 ---
-import Form from "./Settings/Form.tsx"
+import Form from "./Settings/Form"
+import Printables from "./Settings/Printables"
 ---
 
-<aside class="col-[feature] bg-accent text-on-accent">
+<aside class="col-[feature] flex flex-col gap-4 mb-8">
   <Form client:load />
+  <Printables client:load />
 </aside>

@@ -1,23 +1,15 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useStore } from '@nanostores/react'
 import type { ColorRole } from '@lib/config'
-import { colorRoles } from '@lib/config'
+import { colorRoles, colorRoleTitles } from '@lib/config'
 import { colors as colorsStore, setColorRoleFilament } from '@stores/settings'
 import type { ID as FilamentID } from '@config/filaments'
 import { filaments, findById } from '@config/filaments'
 
-const titles: Record<ColorRole, string> = {
-  primary: "Primary",
-  secondary: "Secondary",
-  tertiary: "Tertiary",
-  accent: "Accent",
-  tpu: "TPU",
-}
-
 function Select({ name, ...props }) {
   return (
     <label className="flex-grow items-stretch flex flex-col">
-      <span className="text-white font-semibold lowercase self-center" style={{ fontVariantCaps: "small-caps" }}>{titles[name]}</span>
+      <span className="text-white font-semibold lowercase self-center" style={{ fontVariantCaps: "small-caps" }}>{colorRoleTitles.get(name)}</span>
       <select name={name} {...props} className="text-xs rounded-md text-black" />
     </label>
   )
@@ -54,7 +46,7 @@ export default function Form() {
   useEffect(() => { setHydrated(true) }, [])
 
   return (
-    <form className="flex flex-row flex-wrap justify-around py-2 px-4 gap-2">
+    <form className="bg-accent text-on-accent flex flex-row flex-wrap justify-around gap-2 py-2 px-4 pb-4 border-4 border-shark-800">
       {hydrated ? <Hydrated /> : <Hydrating />}
     </form>
   )
