@@ -6,13 +6,16 @@ function onChange(key, newValue) {
   for (const i of listeners) i(event)
 }
 
-function load() {
-  if (typeof window === "undefined")
-    return Object.create(null) // server-side
+function hash() {
+  if (typeof window === "undefined") return ""
+  return window.location.hash.slice(1)
+}
+
+function load(data = hash()) {
+  if (data === "") return Object.create(null);
 
   try {
-    const hash = window.location.hash.slice(1)
-    const decoded = decodeURIComponent(hash)
+    const decoded = decodeURIComponent(data)
     const uncrushed = JSONCrush.uncrush(decoded)
     const parsed = JSON.parse(uncrushed)
     return parsed
@@ -22,32 +25,65 @@ function load() {
   }
 }
 
-function save(state) {
-  if (typeof window === "undefined")
-    return // server-side, no-op
+function dump(state) {
+  if (typeof window === "undefined") return;
 
   const json = JSON.stringify(state)
   const crushed = JSONCrush.crush(json)
-  window.location.hash = encodeURIComponent(crushed)
+  const encoded = encodeURIComponent(crushed)
+  const url = new URL(window.location.href)
+  url.hash = encoded
+
+  if (window.location.hash === "") {
+    window.history.replaceState({}, "", url)
+  } else {
+    window.history.pushState({}, "", url)
+  }
 }
 
-let initial = load()
+if (typeof window !== "undefined") {
+  window.addEventListener("hashchange", ({ newURL, oldURL }) => {
+    const oldValue = load(new URL(oldURL).hash.slice(1))
+    const newValue = load(new URL(newURL).hash.slice(1))
 
-export const storage = new Proxy(initial, {
-  set(store, name, value) {
-    store[name] = value
-    save(store)
+    const newKeys = new Set(Object.keys(newValue))
+    const oldKeys = new Set(Object.keys(oldValue))
+    const removed = [...oldKeys].filter(k => !newKeys.has(k))
+    const changedOrAdded = [...newKeys].filter(k => oldValue[k] !== newValue[k])
+
+    removed.forEach(i => onChange(i, undefined))
+    changedOrAdded.forEach(i => onChange(i, newValue[i]))
+  })
+}
+
+let store = load()
+
+let saveQueued = false
+
+function scheduleDumpStore() {
+  if (typeof window === "undefined") return;
+  saveQueued || window.queueMicrotask(() => {
+    dump(store)
+    saveQueued = false
+  })
+  saveQueued = true
+}
+
+export const storage = new Proxy(store, {
+  set(target, name, value) {
+    target[name] = value
+    scheduleDumpStore()
     onChange(name, value)
     return true
   },
-  deleteProperty(store, name) {
-    delete store[name]
-    save(store)
+  deleteProperty(target, name) {
+    delete target[name]
+    scheduleDumpStore()
     onChange(name, undefined)
     return true
   },
-  get(store, name) {
-    return store[name]
+  get(target, name) {
+    return target[name]
   },
 })
 
