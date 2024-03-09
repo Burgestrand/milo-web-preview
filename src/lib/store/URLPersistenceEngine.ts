@@ -49,13 +49,13 @@ if (typeof window !== "undefined") {
     const oldValue = load(new URL(oldURL).hash.slice(1))
     const newValue = load(new URL(newURL).hash.slice(1))
 
-    const newKeys = new Set(Object.keys(newValue))
-    const oldKeys = new Set(Object.keys(oldValue))
-    const removed = [...oldKeys].filter(k => !newKeys.has(k))
-    const changedOrAdded = [...newKeys].filter(k => oldValue[k] !== newValue[k])
+    const keys = new Set([...Object.keys(oldValue), ...Object.keys(newValue)])
 
-    removed.forEach(i => onChange(i, undefined))
-    changedOrAdded.forEach(i => onChange(i, newValue[i]))
+    keys.forEach(k => {
+      if (k in newValue === false) return onChange(k, undefined); // removed
+      if (k in oldValue === false) return onChange(k, newValue[k]); // added
+      if (oldValue[k] !== newValue[k]) return onChange(k, newValue[k]); // changed
+    })
   })
 }
 
