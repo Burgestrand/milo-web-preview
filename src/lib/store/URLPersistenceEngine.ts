@@ -31,13 +31,16 @@ function dump(state) {
   const json = JSON.stringify(state)
   const crushed = JSONCrush.crush(json)
   const encoded = encodeURIComponent(crushed)
-  const url = new URL(window.location.href)
-  url.hash = encoded
+  const currentUrl = new URL(window.location.toString())
+  const newUrl = new URL(window.location.toString())
+  newUrl.hash = encoded
+
+  if (currentUrl.toString() === newUrl.toString()) return;
 
   if (window.location.hash === "") {
-    window.history.replaceState({}, "", url)
+    window.history.replaceState({}, "", newUrl.toString())
   } else {
-    window.history.pushState({}, "", url)
+    window.history.pushState({}, "", newUrl.toString())
   }
 }
 
