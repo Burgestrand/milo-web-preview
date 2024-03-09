@@ -1,7 +1,7 @@
 import type { PersistentEncoder } from '@nanostores/persistent'
-import type { Material } from '@lib/config/materials'
+import type { Material } from '@lib/materials'
 
-import * as materials from "@lib/config/materials"
+import * as materials from "@lib/materials"
 
 export default class MaterialEncoder implements PersistentEncoder<Material> {
   encode(value: Material) {

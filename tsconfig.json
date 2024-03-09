@@ -4,9 +4,7 @@
     "baseUrl": ".",
     "paths": {
       "@lib/*": [ "src/lib/*" ],
-      "@config/*": [ "src/lib/config/*" ],
       "@components/*": [ "src/components/*" ],
-      "@stores/*": [ "src/lib/stores/*" ],
       "@layouts/*": [ "src/layouts/*" ],
     },
     "jsx": "react-jsx",

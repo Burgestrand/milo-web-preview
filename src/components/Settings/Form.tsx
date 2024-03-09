@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { useStore } from '@nanostores/react'
 import type { ColorRole } from '@lib/config'
 import { colorRoles, colorRoleTitles } from '@lib/config'
-import { colors as colorsStore, setColorRoleMaterial } from '@stores/settings'
-import type { ID as MaterialID } from '@lib/config/materials'
-import { materials, findById } from '@lib/config/materials'
+import { colorRoleToMaterial, setColorRoleMaterial } from '@lib/store'
+import type { ID as MaterialID } from '@lib/materials'
+import { materials, findById } from '@lib/materials'
 
 function Select({ name, ...props }) {
   return (
@@ -16,17 +16,15 @@ function Select({ name, ...props }) {
 }
 
 function Hydrated() {
-  const $colors = useStore(colorsStore)
+  const $colorRoleToMaterial = useStore(colorRoleToMaterial)
 
   const handleColorChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const material = findById(event.target.value as MaterialID)
     setColorRoleMaterial(event.target.name as ColorRole, material)
   }, [])
 
-  const $colorRoles = colorRoles.map((colorRole) => ({ colorRole, material: $colors[colorRole] }))
-
-  return $colorRoles.map(({ colorRole, material }) => (
-    <Select key={colorRole} name={colorRole} value={material.id} onChange={handleColorChange}>
+  return colorRoles.map((colorRole) => (
+    <Select key={colorRole} name={colorRole} value={$colorRoleToMaterial[colorRole].id} onChange={handleColorChange}>
       {materials.map(({ id, name }) => <option key={id} value={id}>{name}</option>)}
     </Select>
   ))
@@ -41,7 +39,6 @@ function Hydrating() {
 }
 
 export default function Form() {
-  // Before client rendering our $colors are incorrect.
   const [hydrated, setHydrated] = useState(false)
   useEffect(() => { setHydrated(true) }, [])
 

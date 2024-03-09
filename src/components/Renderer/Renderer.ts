@@ -5,9 +5,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 
 import type { ColorRole } from "@lib/config"
-import type { Printable } from '@config/printables'
-import printables from '@config/printables'
-import { colors as colorStore } from '@stores/settings.ts'
+import type { Printable } from '@lib/printables'
+import printables from '@lib/printables'
+import { colorRoleToMaterial as colorStore } from '@lib/store'
 
 export type RendererProgressEvent = CustomEvent<ProgressEvent>
 

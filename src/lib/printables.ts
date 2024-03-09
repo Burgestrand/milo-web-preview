@@ -1,4 +1,4 @@
-import type { ColorRole } from "../config"
+import type { ColorRole } from "./config"
 
 export type Instruction =
   { type: "print", color: ColorRole } |

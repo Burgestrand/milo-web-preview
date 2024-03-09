@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import { useStore } from "@nanostores/react"
-import printables, { instructions } from "@config/printables"
+import printables, { instructions } from "@lib/printables"
 import { colorRoleTitles } from "@lib/config"
-import type { Instruction, Printable } from "@config/printables"
-import { colors } from "@stores/settings"
+import type { Instruction, Printable } from "@lib/printables"
+import { colorRoleToMaterial } from "@lib/store"
 
 const printablesByInstruction = new Map<Instruction, Printable[]>()
 
@@ -19,7 +19,7 @@ for (const printable of printables) {
 printablesByInstruction.delete(instructions.hide)
 
 function Color({ color }: { color: string }) {
-  const $colors = useStore(colors)
+  const $colorRoleToMaterial = useStore(colorRoleToMaterial)
   const [hydrated, setHydrated] = useState(false)
   useEffect(() => { setHydrated(true) }, [])
 
@@ -27,7 +27,7 @@ function Color({ color }: { color: string }) {
     return null
   }
 
-  return (<span>({$colors[color].name})</span>)
+  return (<span>({$colorRoleToMaterial[color].name})</span>)
 }
 
 function Section({ instruction, printables }: { instruction: Instruction, printables: Printable[] }) {
