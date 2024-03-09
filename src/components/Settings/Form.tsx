@@ -4,7 +4,7 @@ import type { ColorRole } from '@lib/config'
 import { colorRoles, colorRoleTitles } from '@lib/config'
 import { colorRoleToMaterial, setColorRoleMaterial } from '@lib/store'
 import type { ID as MaterialID } from '@lib/materials'
-import { materials, findById } from '@lib/materials'
+import { default as materials, findById, id } from '@lib/materials'
 
 function Select({ name, ...props }) {
   return (
@@ -24,8 +24,8 @@ function Hydrated() {
   }, [])
 
   return colorRoles.map((colorRole) => (
-    <Select key={colorRole} name={colorRole} value={$colorRoleToMaterial[colorRole].id} onChange={handleColorChange}>
-      {materials.map(({ id, name }) => <option key={id} value={id}>{name}</option>)}
+    <Select key={colorRole} name={colorRole} value={id($colorRoleToMaterial[colorRole])} onChange={handleColorChange}>
+      {Object.values(materials).map((material) => <option key={id(material)} value={id(material)}>{material.name}</option>)}
     </Select>
   ))
 }

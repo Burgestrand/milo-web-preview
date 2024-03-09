@@ -157,7 +157,7 @@ export default class Renderer {
           node.children.forEach((child) => {
             if (child.type === "Mesh") {
               const mesh = child as THREE.Mesh
-              mesh.material = material.three
+              mesh.material = material
             }
           })
         })

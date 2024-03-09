@@ -1,164 +1,103 @@
 import * as THREE from 'three'
 
-export interface Material {
-  id: ID,
-  name: string,
-  three: THREE.MeshStandardMaterial
-}
+export type Material = THREE.Material
+export type ID = string
 
-// DuraPro ASA Neon Green
-export const neonGreen: Material = {
-  id: "neonGreen",
-  name: "Neon Green",
-  three: new THREE.MeshStandardMaterial({
+const materials: Record<ID, Material> = Object.assign(Object.create(null), {
+  neonGreen: new THREE.MeshStandardMaterial({
+    name: "Neon Green",
     color: 0x00FF00,
     roughness: 0.4,
-    metalness: 0.2
-  })
-}
-
-// DuraPro ASA Neon Orange
-export const neonOrange: Material = {
-  id: "neonOrange",
-  name: "Neon Orange",
-  three: new THREE.MeshStandardMaterial({
-    color: 0xFF8500, // Neon Orange
+    metalness: 0.2,
+    userData: { id: "neonGreen" }
+  }),
+  neonOrange: new THREE.MeshStandardMaterial({
+    name: "Neon Orange",
+    color: 0xFF8500,
     roughness: 0.7,
-    metalness: 0.1
-  })
-}
-
-// DuraPro ASA Neon Pink
-export const neonPink: Material = {
-  id: "neonPink",
-  name: "Neon Pink",
-  three: new THREE.MeshStandardMaterial({
+    metalness: 0.1,
+    userData: { id: "neonOrange", }
+  }),
+  neonPink: new THREE.MeshStandardMaterial({
+    name: "Neon Pink",
     color: 0xFF69B4,
     roughness: 0.4,
-    metalness: 0.2
-  })
-}
-
-// DuraPro ASA Neon Yellow
-export const neonYellow: Material = {
-  id: "neonYellow",
-  name: "Neon Yellow",
-  three: new THREE.MeshStandardMaterial({
-    color: 0xDDFF00, // Neon Yellow
+    metalness: 0.2,
+    userData: { id: "neonPink" }
+  }),
+  neonYellow: new THREE.MeshStandardMaterial({
+    name: "Neon Yellow",
+    color: 0xDDFF00,
     roughness: 0.9,
-    metalness: 0.05
-  })
-}
-
-export const blue: Material = {
-  id: "blue",
-  name: "Blue",
-  three: new THREE.MeshPhysicalMaterial({
-    color: 0x1166dd, // Adjust the color based on your requirement
+    metalness: 0.05,
+    userData: { id: "neonYellow" }
+  }),
+  blue: new THREE.MeshPhysicalMaterial({
+    name: "Blue",
+    color: 0x1166dd,
     metalness: 0.05,
     roughness: 0.8,
     reflectivity: 0.1,
     clearcoat: 0.0,
-    clearcoatRoughness: 0.7
-  })
-}
-
-export const red: Material = {
-  id: "red",
-  name: "Red",
-  three: new THREE.MeshStandardMaterial({
+    clearcoatRoughness: 0.7,
+    userData: { id: "blue" }
+  }),
+  red: new THREE.MeshStandardMaterial({
+    name: "Red",
     color: 0xff5555,
     roughness: 0.4,
-    metalness: 0.2
-  })
-}
-
-export const lightBlue: Material = {
-  id: "lightBlue",
-  name: "Light Blue",
-  three: new THREE.MeshStandardMaterial({
+    metalness: 0.2,
+    userData: { id: "red" }
+  }),
+  lightBlue: new THREE.MeshStandardMaterial({
+    name: "Light Blue",
     color: 0x66aaff,
     roughness: 0.4,
-    metalness: 0.2
-  })
-}
-
-export const turqoise: Material = {
-  id: "turqoise",
-  name: "Turqoise",
-  three: new THREE.MeshStandardMaterial({
+    metalness: 0.2,
+    userData: { id: "lightBlue" }
+  }),
+  turqoise: new THREE.MeshStandardMaterial({
+    name: "Turqoise",
     color: 0x00FFFF,
     roughness: 0.4,
-    metalness: 0.2
-  })
-}
-
-export const purple: Material = {
-  id: "purple",
-  name: "Purple",
-  three: new THREE.MeshStandardMaterial({
+    metalness: 0.2,
+    userData: { id: "turqoise" }
+  }),
+  purple: new THREE.MeshStandardMaterial({
+    name: "Purple",
     color: 0x703A92,
     roughness: 0.4,
-    metalness: 0.2
-  })
-}
-
-export const white: Material = {
-  id: "white",
-  name: "White",
-  three: new THREE.MeshStandardMaterial({
-    color: 0xeeeeee, // White
+    metalness: 0.2,
+    userData: { id: "purple" }
+  }),
+  white: new THREE.MeshStandardMaterial({
+    name: "White",
+    color: 0xeeeeee,
     roughness: 0.4,
-    metalness: 0.2
-  })
-}
-
-export const black: Material = {
-  id: "black",
-  name: "Black",
-  three: new THREE.MeshPhysicalMaterial({
+    metalness: 0.2,
+    userData: { id: "white" }
+  }),
+  black: new THREE.MeshPhysicalMaterial({
+    name: "Black",
     color: 0x444444,
     roughness: 0.8,
     metalness: 0.05,
     clearcoat: 0.0,
-    clearcoatRoughness: 0.7
+    clearcoatRoughness: 0.7,
+    userData: { id: "black" }
   })
+})
+
+export default materials
+
+export function id(material: Material): ID {
+  return material.userData.id
 }
 
-export const materials: Material[] = [
-  neonGreen,
-  neonOrange,
-  neonPink,
-  neonYellow,
-  blue,
-  turqoise,
-  white,
-  black,
-  purple,
-  lightBlue,
-  red
-]
-
-// TODO: Automatic
-export type ID =
-  "turqoise" |
-  "neonGreen" |
-  "neonOrange" |
-  "neonPink" |
-  "neonYellow" |
-  "blue" |
-  "white" |
-  "purple" |
-  "lightBlue" |
-  "red" |
-  "black"
-
 export function findById(id: ID): Material {
-  const material = materials.find(material => material.id === id)
-
-  if (!material) {
+  if (!(id in materials)) {
     throw new Error(`Material not found: ${id}`)
   }
 
-  return material
+  return materials[id]
 }

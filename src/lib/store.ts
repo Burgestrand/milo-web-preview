@@ -2,7 +2,7 @@ import { persistentMap } from '@nanostores/persistent'
 
 import type { Material } from '@lib/materials'
 export type { Material }
-import * as materials from '@lib/materials'
+import { default as materials } from '@lib/materials'
 
 import type { ColorRole } from '@lib/config'
 export type { ColorRole }
