@@ -6,13 +6,3 @@ I'm ordering filament *really soon* so I wanted something *very quick and dirty*
 
 * [Milo v1.5](https://github.com/MillenniumMachines/)
 * [Astro](https://astro.build)
-
-## Future ideas
-
-* A catalogue of all printed parts.
-* Ability to override color for each individual part.
-* Significantly improve rendering quality.
-  * It doesn't really look like the model.
-  * The colors aren't necessarily representative.
-* Make it easier to add filaments run-time.
-* Share color choice via URL.
