@@ -33,6 +33,7 @@ function Color({ color }: { color: string }) {
 function Section({ instruction, printables }: { instruction: Instruction, printables: Printable[] }) {
   const title = instruction.type === "hide" ? "Hide" : `Print: ${colorRoleTitles.get(instruction.color)}`
   const color = instruction.type === "hide" ? null : <Color color={instruction.color} />
+  const printablesByStl = new Map(printables.map(printable => [printable.stl, printable]))
 
   return (
     <section className="bg-shark-900 text-white rounded-lg py-2 px-4">
@@ -40,7 +41,7 @@ function Section({ instruction, printables }: { instruction: Instruction, printa
         <h3 className="text-lg font-bold">{title} {color}</h3>
       </header>
       <ul>
-        {printables.map((printable, index) => (<li key={index} className="mt-1">{printable.stl}</li>))}
+        {Array.from(printablesByStl.keys()).map(stl => <li key={stl} className="mt-1">{stl}</li>)}
       </ul>
     </section>
   )
