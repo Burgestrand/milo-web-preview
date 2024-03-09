@@ -77,15 +77,18 @@ printables.push({ path: ["Z_axis_anti_backlash_nut"], instruction: instructions.
 printables.push({ path: ["Ballast_box"], instruction: instructions.print.primary, stl: "Minimill Main/Main Column/Ballast Box x1.stl" })
 printables.push({ path: ["Ballast_cap"], instruction: instructions.print.accent, stl: "Minimill Main/Main Column/Ballast Cap x1.stl" })
 
-// TODO: Find these
-// Minimill Main/Main Column/Column Plate A x1.stl
-// Minimill Main/Main Column/Column Plate A Mirror x1.stl
-// Minimill Main/Main Column/Column Plate B x1.stl
-// Minimill Main/Main Column/Column Plate B Mirror x1.stl
-// Minimill Main/Main Column/Column Plate C x1.stl
-// Minimill Main/Main Column/Column Plate C Mirror x1.stl
+// Column Plates, not needed for LDO.
+printables.push({ path: ["Joining_plate_A_mirror"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate A Mirror x1.stl" })
+printables.push({ path: ["Joining_plate_A"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate A x1.stl" })
+printables.push({ path: ["Joining_plate_B_mirror"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate B Mirror x1.stl" })
+printables.push({ path: ["Joining_plate_B"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate B x1.stl" })
+printables.push({ path: ["Joining_plate_C_mirror"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate C Mirror x1.stl" })
+printables.push({ path: ["Joining_plate_C"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate C x1.stl" })
+
+// NOTE: This single one is actually both STLs.
 // Minimill Main/Main Column/Z Reinforcement Bracket x1.stl
 // Minimill Main/Main Column/Z Reinforcement Bracket Mirror x1.stl
+printables.push({ path: ["Z_reinforcement_bracket"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Z Reinforcement Bracket Mirror x1.stl" })
 
 printables.push({ path: ["Z_drag_chain_mount_B"], instruction: instructions.print.secondary, stl: "Minimill Main/Cable Chain Mounts/[a] Z Drag Chain Mount B x1.stl" })
 printables.push({ path: ["Z_drag_chain_mount_A_(1)"], instruction: instructions.print.secondary, stl: "Minimill Main/Cable Chain Mounts/[a] Z Drag Chain Mount A x1.stl" })
@@ -143,7 +146,6 @@ printables.push({ path: ["Skirt_Rear"], instruction: instructions.print.tertiary
 
 // Electrical
 printables.push({ path: ["PSU_mounting_bracket_(1)_(1)"], instruction: instructions.print.primary, stl: "Electronics Table/PSU Mounting Bracket A x2.stl" });
-// Electronics Table/PSU Mounting Bracket A x2.stl
 
 ((printable: Omit<Printable, "path">) => {
 printables.push({ path: ["PSU_mounting_bracket"], ...printable })
