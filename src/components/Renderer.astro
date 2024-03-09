@@ -1,12 +1,15 @@
 ---
+import fs from "fs/promises"
 import ProgressBar from "./Renderer/ProgressBar.astro"
+
+const fallbackTotalDownloadSize = await fs.stat("public/CAD.glb").then(stats => stats.size).catch(() => 0)
 ---
 
 <div class="col-[feature] bg-shark-800 p-1 pb-0 relative">
 	<div data-progress-overlay class="absolute inset-4 flex flex-col place-content-center place-items-center">
 		<p class="text-white mb-2">Loading model...</p>
 
-		<ProgressBar class="flex w-full max-w-xl" />
+		<ProgressBar class="flex w-full max-w-xl" data-total-fallback={fallbackTotalDownloadSize} />
 	</div>
 
 	<canvas id="renderer-canvas" class="
@@ -23,6 +26,7 @@ import ProgressBar from "./Renderer/ProgressBar.astro"
 	import ProgressBar from "./Renderer/ProgressBar/ProgressBar.ts"
 
 	const progressBar = document.querySelector("progress-bar") as ProgressBar
+	const totalFallback = Number(progressBar.dataset.totalFallback)
 	const canvas = document.querySelector("canvas")
 
 	const renderer = new Renderer({
@@ -31,12 +35,9 @@ import ProgressBar from "./Renderer/ProgressBar.astro"
 	})
 
 	canvas.addEventListener("custom:progress", ({ detail: progressEvent }: RendererProgressEvent) => {
-		if (progressEvent.lengthComputable) {
-			const progress = (progressEvent.loaded / progressEvent.total) * 100
-			progressBar.progress = progress
-		} else {
-			progressBar.progress = Math.random() * 100
-		}
+		const total = progressEvent.total || totalFallback
+		const progress = (progressEvent.loaded / total) * 100
+		progressBar.progress = progress
 	})
 
 	canvas.addEventListener("custom:loaded", ({ detail: progressEvent }: RendererProgressEvent) => {
