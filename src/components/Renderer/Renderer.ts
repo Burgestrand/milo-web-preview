@@ -4,7 +4,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 
-import type { Printable, Color } from '@config/printables'
+import type { ColorRole } from "@lib/config"
+import type { Printable } from '@config/printables'
 import printables from '@config/printables'
 import { colors as colorStore } from '@stores/settings.ts'
 
@@ -131,7 +132,7 @@ export default class Renderer {
     })
 
     console.time("Following all instructions")
-    const nodesByColor = new Map<Color, THREE.Object3D[]>()
+    const nodesByColorRole = new Map<ColorRole, THREE.Object3D[]>()
     for (const [printable, nodes] of nodesByPrintable.entries()) {
       switch (printable.instruction.type) {
         case "hide":
@@ -140,17 +141,17 @@ export default class Renderer {
         case "print":
             // no-op
           const color = printable.instruction.color
-          const stored = nodesByColor.get(color) || []
-          nodesByColor.set(color, stored.concat(nodes))
+          const stored = nodesByColorRole.get(color) || []
+          nodesByColorRole.set(color, stored.concat(nodes))
           break
       }
     }
     console.timeEnd("Following all instructions")
 
     console.time("Painting all printables")
-    colorStore.subscribe((colorToFilament) => {
-      nodesByColor.forEach((nodes, color) => {
-        const filament = colorToFilament[color]
+    colorStore.subscribe((colorRoleToFilament) => {
+      nodesByColorRole.forEach((nodes, colorRole) => {
+        const filament = colorRoleToFilament[colorRole]
 
         nodes.forEach((node) => {
           node.children.forEach((child) => {

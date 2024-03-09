@@ -11,8 +11,6 @@ import FilamentEncoder from "./FilamentEncoder"
 
 export const colors = persistentMap<Record<ColorRole, Filament>>("colors:", {
   primary: filaments.black,
-  secondary: filaments.black,
-  tertiary: filaments.black,
   accent: filaments.blue,
   tpu: filaments.turqoise
 }, new FilamentEncoder())
