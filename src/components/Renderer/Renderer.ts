@@ -149,15 +149,15 @@ export default class Renderer {
     console.timeEnd("Following all instructions")
 
     console.time("Painting all printables")
-    colorStore.subscribe((colorRoleToFilament) => {
+    colorStore.subscribe((colorRoleToMaterial) => {
       nodesByColorRole.forEach((nodes, colorRole) => {
-        const filament = colorRoleToFilament[colorRole]
+        const material = colorRoleToMaterial[colorRole]
 
         nodes.forEach((node) => {
           node.children.forEach((child) => {
             if (child.type === "Mesh") {
               const mesh = child as THREE.Mesh
-              mesh.material = filament.material
+              mesh.material = material.three
             }
           })
         })

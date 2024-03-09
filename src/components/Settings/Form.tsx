@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { useStore } from '@nanostores/react'
 import type { ColorRole } from '@lib/config'
 import { colorRoles, colorRoleTitles } from '@lib/config'
-import { colors as colorsStore, setColorRoleFilament } from '@stores/settings'
-import type { ID as FilamentID } from '@config/filaments'
-import { filaments, findById } from '@config/filaments'
+import { colors as colorsStore, setColorRoleMaterial } from '@stores/settings'
+import type { ID as MaterialID } from '@lib/config/materials'
+import { materials, findById } from '@lib/config/materials'
 
 function Select({ name, ...props }) {
   return (
@@ -19,15 +19,15 @@ function Hydrated() {
   const $colors = useStore(colorsStore)
 
   const handleColorChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
-    const filament = findById(event.target.value as FilamentID)
-    setColorRoleFilament(event.target.name as ColorRole, filament)
+    const material = findById(event.target.value as MaterialID)
+    setColorRoleMaterial(event.target.name as ColorRole, material)
   }, [])
 
-  const $colorRoles = colorRoles.map((colorRole) => ({ colorRole, filament: $colors[colorRole] }))
+  const $colorRoles = colorRoles.map((colorRole) => ({ colorRole, material: $colors[colorRole] }))
 
-  return $colorRoles.map(({ colorRole, filament }) => (
-    <Select key={colorRole} name={colorRole} value={filament.id} onChange={handleColorChange}>
-      {filaments.map(({ id, name }) => <option key={id} value={id}>{name}</option>)}
+  return $colorRoles.map(({ colorRole, material }) => (
+    <Select key={colorRole} name={colorRole} value={material.id} onChange={handleColorChange}>
+      {materials.map(({ id, name }) => <option key={id} value={id}>{name}</option>)}
     </Select>
   ))
 }
