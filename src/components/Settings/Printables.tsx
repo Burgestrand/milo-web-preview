@@ -7,14 +7,14 @@ import { colorRoleToMaterial } from "@lib/store"
 
 const printablesByInstruction = new Map<Instruction, Printable[]>()
 
-for (const printable of printables) {
+printables.forEach((printable) => {
   const instruction = printable.instruction
 
   if (!printablesByInstruction.has(instruction)) {
     printablesByInstruction.set(instruction, [])
   }
   printablesByInstruction.get(instruction).push(printable)
-}
+})
 
 printablesByInstruction.delete(instructions.hide)
 
@@ -33,7 +33,7 @@ function Color({ color }: { color: string }) {
 function Section({ instruction, printables }: { instruction: Instruction, printables: Printable[] }) {
   const title = instruction.type === "hide" ? "Hide" : `Print: ${colorRoleTitles.get(instruction.color)}`
   const color = instruction.type === "hide" ? null : <Color color={instruction.color} />
-  const printablesByStl = new Map(printables.map(printable => [printable.stl, printable]))
+  const printablesByStl = new Map(Array.from(printables).map(printable => [printable.stl, printable]))
 
   return (
     <section className="bg-shark-900 text-white rounded-lg py-2 px-4">

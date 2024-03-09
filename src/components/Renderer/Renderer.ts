@@ -85,13 +85,13 @@ export default class Renderer {
     console.debug(gltf)
     console.timeEnd(timer)
 
-    const printablesByRoot = printables.reduce((tree, printable) => {
+    const printablesByRoot = Array.from(printables.values()).reduce((tree, printable) => {
       const segment = printable.path[0]
       const list = tree.get(segment) || []
       list.push(printable)
       return tree.set(segment, list)
     }, new Map<string, Printable[]>())
-    const nodesByPrintable = new Map(printables.map(printable => [printable, []]))
+    const nodesByPrintable = new Map(Array.from(printables.values()).map(printable => [printable, []]))
 
     const model = gltf.scene
 

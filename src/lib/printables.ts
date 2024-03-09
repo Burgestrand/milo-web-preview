@@ -7,9 +7,8 @@ export type Instruction =
 type ObjectPath = string
 
 export type Printable = {
-  name?: string
-  group?: string
-  uuid?: string
+  id: string
+
   instruction: Instruction
 
   // A single thing might have multiple model paths, e.g. a mirrored part.
@@ -31,127 +30,141 @@ export const instructions: {
   }
 }
 
-const printables: Printable[] = []
+const printables = new Map<string, Printable>()
+
+function push(printable: Omit<Printable, "id">) {
+  // Generate ID based on STL and path.
+  const id = printable.stl + "@" + printable.path.join("/")
+
+  // Digest the ID into something smaller.
+  const digest = id.split("").reduce((digest, char) =>
+    ((digest << 5) - digest) + char.charCodeAt(0)
+  , 0).toString(36)
+
+  if (printables.has(digest))
+    throw new Error("Duplicate printable ID: " + digest)
+
+  printables.set(digest, { id: digest, ...printable })
+}
 
 // 65mm Spindle
-printables.push({
-  uuid: "265ec0ef-ada2-4e32-806d-dd2eaae4b23d",
+push({
   path: ["Spindle_mount_65mm_part_A_(1)"],
   stl: "Minimill Main/Spindle Mount/[a] Spindle Mount 65mm Part A x1.stl",
   instruction: instructions.hide
 })
-printables.push({
+push({
   path: ["SMH_65mm_part_B1", "SMH_65mm_part_B"],
   stl: "Minimill Main/Spindle Mount/[a] Spindle Mount 65mm Part B x1.stl",
   instruction: instructions.hide
 })
 
 // Spindle
-printables.push({
+push({
   path: ["Spindle_mount_80mm_part_A"],
   stl: "Minimill Main/Spindle Mount/[a] Spindle Mount 80mm Part A x1.stl",
   instruction: instructions.print.accent
 })
-printables.push({ path: ["SMH_80mm_part_B_(1)"], instruction: instructions.print.primary, stl: "Minimill Main/Spindle Mount/Spindle Mount 80mm Part B x1.stl" })
-printables.push({ path: ["Logo_insert"], instruction: instructions.print.primary, stl: "Minimill Main/Spindle Mount/Logo Insert x1.stl" })
+push({ path: ["SMH_80mm_part_B_(1)"], instruction: instructions.print.primary, stl: "Minimill Main/Spindle Mount/Spindle Mount 80mm Part B x1.stl" })
+push({ path: ["Logo_insert"], instruction: instructions.print.primary, stl: "Minimill Main/Spindle Mount/Logo Insert x1.stl" })
 
 // X Axis
-printables.push({ path: ["X_axis_motor_mount"], instruction: instructions.print.primary, stl: "Minimill Main/X Axis STLs/X Axis Motor Mount x1.stl" })
-printables.push({ path: ["X_axis_Bearing_Block"], instruction: instructions.print.primary, stl: "Minimill Main/X Axis STLs/X Axis Bearing Block x1.stl" })
-printables.push({ path: ["X_axis_anti_backlash_Nut"], instruction: instructions.print.primary, stl: "Minimill Main/X Axis STLs/X Axis Anti Backlash Nut x1.stl" })
+push({ path: ["X_axis_motor_mount"], instruction: instructions.print.primary, stl: "Minimill Main/X Axis STLs/X Axis Motor Mount x1.stl" })
+push({ path: ["X_axis_Bearing_Block"], instruction: instructions.print.primary, stl: "Minimill Main/X Axis STLs/X Axis Bearing Block x1.stl" })
+push({ path: ["X_axis_anti_backlash_Nut"], instruction: instructions.print.primary, stl: "Minimill Main/X Axis STLs/X Axis Anti Backlash Nut x1.stl" })
 
 // Y Axis
-printables.push({ path: ["Y_axis_bearing_block"], instruction: instructions.print.accent, stl: "Minimill Main/Y Axis STLs/Y Axis Bearing Block x1.stl" })
-printables.push({ path: ["Y_axis_anti_backlash_nut"], instruction: instructions.print.primary, stl: "Minimill Main/Y Axis STLs/Y Axis Anti Backlash Nut x1.stl" })
-printables.push({ path: ["Y_axis_motor_mount_(1)"], instruction: instructions.print.primary, stl: "Minimill Main/Y Axis STLs/Y Axis Motor Mount x1.stl" })
+push({ path: ["Y_axis_bearing_block"], instruction: instructions.print.accent, stl: "Minimill Main/Y Axis STLs/Y Axis Bearing Block x1.stl" })
+push({ path: ["Y_axis_anti_backlash_nut"], instruction: instructions.print.primary, stl: "Minimill Main/Y Axis STLs/Y Axis Anti Backlash Nut x1.stl" })
+push({ path: ["Y_axis_motor_mount_(1)"], instruction: instructions.print.primary, stl: "Minimill Main/Y Axis STLs/Y Axis Motor Mount x1.stl" })
 
-printables.push({ path: ["Y_drag_chain_mount(Mirror)"], instruction: instructions.print.accent, stl: "Minimill Main/Cable Chain Mounts/[a] Y Drag Chain Mount x1.stl" })
-printables.push({ path: ["XY_dragchain_transition"], instruction: instructions.print.accent, stl: "Minimill Main/Cable Chain Mounts/[a] XY Drag Chain Transition x1.stl" })
+push({ path: ["Y_drag_chain_mount(Mirror)"], instruction: instructions.print.accent, stl: "Minimill Main/Cable Chain Mounts/[a] Y Drag Chain Mount x1.stl" })
+push({ path: ["XY_dragchain_transition"], instruction: instructions.print.accent, stl: "Minimill Main/Cable Chain Mounts/[a] XY Drag Chain Transition x1.stl" })
 
 // Z Axis
-printables.push({ path: ["Z_axis_motor_mount_(1)"], instruction: instructions.print.primary, stl: "Minimill Main/Z Axis STLs/Z Motor Mount x1.stl" })
-printables.push({ path: ["Z_Axis_bearing_block"], instruction: instructions.print.accent, stl: "Minimill Main/Z Axis STLs/[a] Z Axis Bearing Block x1.stl" })
-printables.push({ path: ["Z_axis_anti_backlash_nut"], instruction: instructions.print.primary, stl: "Minimill Main/Z Axis STLs/Z Axis Anti Backlash Nut x1.stl" })
-printables.push({ path: ["Ballast_box"], instruction: instructions.print.primary, stl: "Minimill Main/Main Column/Ballast Box x1.stl" })
-printables.push({ path: ["Ballast_cap"], instruction: instructions.print.primary, stl: "Minimill Main/Main Column/Ballast Cap x1.stl" })
+push({ path: ["Z_axis_motor_mount_(1)"], instruction: instructions.print.primary, stl: "Minimill Main/Z Axis STLs/Z Motor Mount x1.stl" })
+push({ path: ["Z_Axis_bearing_block"], instruction: instructions.print.accent, stl: "Minimill Main/Z Axis STLs/[a] Z Axis Bearing Block x1.stl" })
+push({ path: ["Z_axis_anti_backlash_nut"], instruction: instructions.print.primary, stl: "Minimill Main/Z Axis STLs/Z Axis Anti Backlash Nut x1.stl" })
+push({ path: ["Ballast_box"], instruction: instructions.print.primary, stl: "Minimill Main/Main Column/Ballast Box x1.stl" })
+push({ path: ["Ballast_cap"], instruction: instructions.print.primary, stl: "Minimill Main/Main Column/Ballast Cap x1.stl" })
 
 // Column Plates, not needed for LDO.
-printables.push({ path: ["Joining_plate_A_mirror"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate A Mirror x1.stl" })
-printables.push({ path: ["Joining_plate_A"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate A x1.stl" })
-printables.push({ path: ["Joining_plate_B_mirror"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate B Mirror x1.stl" })
-printables.push({ path: ["Joining_plate_B"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate B x1.stl" })
-printables.push({ path: ["Joining_plate_C_mirror"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate C Mirror x1.stl" })
-printables.push({ path: ["Joining_plate_C"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate C x1.stl" })
+push({ path: ["Joining_plate_A_mirror"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate A Mirror x1.stl" })
+push({ path: ["Joining_plate_A"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate A x1.stl" })
+push({ path: ["Joining_plate_B_mirror"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate B Mirror x1.stl" })
+push({ path: ["Joining_plate_B"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate B x1.stl" })
+push({ path: ["Joining_plate_C_mirror"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate C Mirror x1.stl" })
+push({ path: ["Joining_plate_C"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Column Plate C x1.stl" })
 
 // NOTE: This single one is actually both STLs.
 // Minimill Main/Main Column/Z Reinforcement Bracket x1.stl
 // Minimill Main/Main Column/Z Reinforcement Bracket Mirror x1.stl
-printables.push({ path: ["Z_reinforcement_bracket"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Z Reinforcement Bracket Mirror x1.stl" })
+push({ path: ["Z_reinforcement_bracket"], instruction: instructions.print.primary, stl: "STL Files/Minimill Main/Main Column/Z Reinforcement Bracket Mirror x1.stl" })
 
-printables.push({ path: ["Z_drag_chain_mount_B"], instruction: instructions.print.accent, stl: "Minimill Main/Cable Chain Mounts/[a] Z Drag Chain Mount B x1.stl" })
-printables.push({ path: ["Z_drag_chain_mount_A_(1)"], instruction: instructions.print.accent, stl: "Minimill Main/Cable Chain Mounts/[a] Z Drag Chain Mount A x1.stl" })
-printables.push({ path: ["Z_Wire_redirect_hook"], instruction: instructions.print.accent, stl: "Minimill Main/Cable Chain Mounts/[a] Z Cable Redirect Hook x1.stl" })
-printables.push({ path: ["Z_axis_cable_chain_backer"], instruction: instructions.print.accent, stl: "Minimill Main/Cable Chain Mounts/[a} Z Axis Cable Chain Backer x1.stl" });
+push({ path: ["Z_drag_chain_mount_B"], instruction: instructions.print.accent, stl: "Minimill Main/Cable Chain Mounts/[a] Z Drag Chain Mount B x1.stl" })
+push({ path: ["Z_drag_chain_mount_A_(1)"], instruction: instructions.print.accent, stl: "Minimill Main/Cable Chain Mounts/[a] Z Drag Chain Mount A x1.stl" })
+push({ path: ["Z_Wire_redirect_hook"], instruction: instructions.print.accent, stl: "Minimill Main/Cable Chain Mounts/[a] Z Cable Redirect Hook x1.stl" })
+push({ path: ["Z_axis_cable_chain_backer"], instruction: instructions.print.accent, stl: "Minimill Main/Cable Chain Mounts/[a} Z Axis Cable Chain Backer x1.stl" });
 
 // Table
-((printable: Omit<Printable, "path">) => {
-  printables.push({ path: ["handwheel_handle_(1)_(1)"], ...printable })
-  printables.push({ path: ["handwheel_handle_(1)"], ...printable })
+((printable: Omit<Printable, "path" | "id" | "id">) => {
+  push({ path: ["handwheel_handle_(1)_(1)"], ...printable })
+  push({ path: ["handwheel_handle_(1)"], ...printable })
 })({ stl: "Minimill Main/Hand Wheels/Handwheel Handle x2.stl", instruction: instructions.print.primary });
 
-((printable: Omit<Printable, "path">) => {
-  printables.push({ path: ["handwheel_(1)"], ...printable })
-  printables.push({ path: ["handwheel"], ...printable });
+((printable: Omit<Printable, "path" | "id">) => {
+  push({ path: ["handwheel_(1)"], ...printable })
+  push({ path: ["handwheel"], ...printable });
 })({ stl: "Minimill Main/Hand Wheels/Handwheel Body x2 .stl", instruction: instructions.print.primary });
 
-((printable: Omit<Printable, "path">) => {
-  printables.push({ path: ["X_axis_Table_support_(Centres)_(1)"], ...printable })
-  printables.push({ path: ["X_axis_Table_support_(Centres)"], ...printable })
+((printable: Omit<Printable, "path" | "id">) => {
+  push({ path: ["X_axis_Table_support_(Centres)_(1)"], ...printable })
+  push({ path: ["X_axis_Table_support_(Centres)"], ...printable })
 })({ stl: "Minimill Main/X Axis STLs/X Axis Table Support Centre x2 .stl", instruction: instructions.print.primary });
 
-((printable: Omit<Printable, "path">) => {
-  printables.push({ path: ["X_axis_Table_support_(ends)"], ...printable })
-  printables.push({ path: ["X_axis_Table_support_(ends)_(3)"], ...printable })
-  printables.push({ path: ["X_axis_Table_support_(ends)_(1)"], ...printable })
-  printables.push({ path: ["X_axis_Table_support_(ends)_(2)"], ...printable })
+((printable: Omit<Printable, "path" | "id">) => {
+  push({ path: ["X_axis_Table_support_(ends)"], ...printable })
+  push({ path: ["X_axis_Table_support_(ends)_(3)"], ...printable })
+  push({ path: ["X_axis_Table_support_(ends)_(1)"], ...printable })
+  push({ path: ["X_axis_Table_support_(ends)_(2)"], ...printable })
 })({ stl: "Minimill Main/X Axis STLs/X Axis Table Support Ends x4 .stl", instruction: instructions.print.primary });
 
 // Misc
-((printable: Omit<Printable, "path">) => {
-  printables.push({ path: ["Table_bolt_down_(2)"], ...printable })
-  printables.push({ path: ["Table_bolt_down"], ...printable })
+((printable: Omit<Printable, "path" | "id">) => {
+  push({ path: ["Table_bolt_down_(2)"], ...printable })
+  push({ path: ["Table_bolt_down"], ...printable })
 })({ stl: "Electronics Table/[a] Table Bolt Down Bracket B x2.stl", instruction: instructions.print.accent });
 
-((printable: Omit<Printable, "path">) => {
-  printables.push({ path: ["table_Bolt_downs"], ...printable })
-  printables.push({ path: ["Table_bolt_down_(1)"], ...printable })
+((printable: Omit<Printable, "path" | "id">) => {
+  push({ path: ["table_Bolt_downs"], ...printable })
+  push({ path: ["Table_bolt_down_(1)"], ...printable })
 })({ stl: "Electronics Table/[a] Table Bolt Down Bracket A x2.stl", instruction: instructions.print.accent });
 
-((printable: Omit<Printable, "path">) => {
-  printables.push({ path: ["TPU_foot"], ...printable })
-  printables.push({ path: ["TPU_foot_(1)"], ...printable })
-  printables.push({ path: ["TPU_foot_(2)"], ...printable })
-  printables.push({ path: ["TPU_foot_(3)"], ...printable })
+((printable: Omit<Printable, "path" | "id">) => {
+  push({ path: ["TPU_foot"], ...printable })
+  push({ path: ["TPU_foot_(1)"], ...printable })
+  push({ path: ["TPU_foot_(2)"], ...printable })
+  push({ path: ["TPU_foot_(3)"], ...printable })
 })({ stl: "Electronics Table/TPU Feet x4.stl", instruction: instructions.print.tpu });
 
-printables.push({ path: ["Skirt_front"], instruction: instructions.print.primary, stl: "Electronics Table/Skirt Front A Solid x1.stl" })
+push({ path: ["Skirt_front"], instruction: instructions.print.primary, stl: "Electronics Table/Skirt Front A Solid x1.stl" })
 // Electronics Table/Skirt Front A Solid x1.stl
 // Electronics Table/Skirt Front B E-Stop x1.stl
 
-printables.push({ path: ["Skirt_Rear"], instruction: instructions.print.primary, stl: "Electronics Table/Rear Skirt A x1.stl" })
+push({ path: ["Skirt_Rear"], instruction: instructions.print.primary, stl: "Electronics Table/Rear Skirt A x1.stl" })
 // Electronics Table/Rear Skirt A x1.stl
 // Electronics Table/Rear Skirt B x1.stl
 
 // Electrical
-printables.push({ path: ["PSU_mounting_bracket_(1)_(1)"], instruction: instructions.print.primary, stl: "Electronics Table/PSU Mounting Bracket A x2.stl" });
+push({ path: ["PSU_mounting_bracket_(1)_(1)"], instruction: instructions.print.primary, stl: "Electronics Table/PSU Mounting Bracket A x2.stl" });
 
-((printable: Omit<Printable, "path">) => {
-printables.push({ path: ["PSU_mounting_bracket"], ...printable })
-printables.push({ path: ["PSU_mounting_bracket_(1)"], ...printable })
+((printable: Omit<Printable, "path" | "id">) => {
+push({ path: ["PSU_mounting_bracket"], ...printable })
+push({ path: ["PSU_mounting_bracket_(1)"], ...printable })
 })({ stl: "Electronics Table/PSU Mounting Bracket B x2.stl", instruction: instructions.print.primary });
 
-printables.push({ path: ["Mainboard_mount"], instruction: instructions.print.primary, stl: "Electronics Table/Mainboard Mount x1.stl" })
-printables.push({ path: ["Cable_channel_"], instruction: instructions.print.primary, stl: "Electronics Table/Cable Channel x1.stl" })
+push({ path: ["Mainboard_mount"], instruction: instructions.print.primary, stl: "Electronics Table/Mainboard Mount x1.stl" })
+push({ path: ["Cable_channel_"], instruction: instructions.print.primary, stl: "Electronics Table/Cable Channel x1.stl" })
 // Electronics Table/Cable Channel Cover x1.stl
 
 export default printables
