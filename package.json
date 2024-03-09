@@ -19,6 +19,7 @@
     "@types/react-dom": "^18.2.19",
     "@types/three": "^0.161.2",
     "astro": "^4.4.4",
+    "jsoncrush": "^1.1.8",
     "nanostores": "^0.10.0",
     "obj2gltf": "^3.1.6",
     "react": "^18.2.0",

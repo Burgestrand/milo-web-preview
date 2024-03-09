@@ -1,4 +1,7 @@
-import { persistentMap } from '@nanostores/persistent'
+import { persistentMap, setPersistentEngine } from '@nanostores/persistent'
+import { storage, events } from './store/URLPersistenceEngine'
+
+setPersistentEngine(storage, events)
 
 import type { Material } from '@lib/materials'
 export type { Material }
