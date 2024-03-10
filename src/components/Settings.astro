@@ -1,9 +1,11 @@
 ---
 import Form from "./Settings/Form"
+import Share from '@components/Share.astro'
 import Printables from "./Settings/Printables"
 ---
 
 <aside class="col-[feature] flex flex-col gap-4 mb-8">
   <Form client:load />
+  <Share />
   <Printables client:load />
 </aside>
