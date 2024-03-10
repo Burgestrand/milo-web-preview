@@ -7,7 +7,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import type { ColorRole } from "@lib/config"
 import type { Printable } from '@lib/printables'
 import printables from '@lib/printables'
-import { colorRoleToMaterial as colorStore } from '@lib/store'
+import { colorRoleToMaterial, printableMaterialOverride } from '@lib/store'
 
 export type RendererProgressEvent = CustomEvent<ProgressEvent>
 
@@ -82,7 +82,6 @@ export default class Renderer {
       renderer.domElement.dispatchEvent(customEvent)
     })
     renderer.domElement.dispatchEvent(new CustomEvent("custom:loaded", { detail: null }))
-    console.debug(gltf)
     console.timeEnd(timer)
 
     const printablesByRoot = Array.from(printables.values()).reduce((tree, printable) => {
@@ -131,39 +130,49 @@ export default class Renderer {
       }
     })
 
-    console.time("Following all instructions")
-    const nodesByColorRole = new Map<ColorRole, THREE.Object3D[]>()
-    for (const [printable, nodes] of nodesByPrintable.entries()) {
-      switch (printable.instruction.type) {
-        case "hide":
-          nodes.forEach(node => node.visible = false)
-          break
-        case "print":
-            // no-op
-          const color = printable.instruction.color
-          const stored = nodesByColorRole.get(color) || []
-          nodesByColorRole.set(color, stored.concat(nodes))
-          break
-      }
-    }
-    console.timeEnd("Following all instructions")
-
-    console.time("Painting all printables")
-    colorStore.subscribe((colorRoleToMaterial) => {
-      nodesByColorRole.forEach((nodes, colorRole) => {
-        const material = colorRoleToMaterial[colorRole]
-
-        nodes.forEach((node) => {
-          node.children.forEach((child) => {
-            if (child.type === "Mesh") {
-              const mesh = child as THREE.Mesh
-              mesh.material = material
-            }
-          })
-        })
+    function paint(node, material) {
+      node.children.forEach((child) => {
+        if (child.type === "Mesh") {
+          const mesh = child as THREE.Mesh
+          mesh.material = material
+        }
       })
-    })
-    console.timeEnd("Painting all printables")
+    }
+
+    function repaint() {
+      console.time("Repainting")
+      const $colorRoleToMaterial = colorRoleToMaterial.get()
+      const $printableMaterialOverride = printableMaterialOverride.get()
+
+      printables.forEach((printable) => {
+        const nodes = nodesByPrintable.get(printable)
+
+        if (printable.instruction.type === "hide") {
+          nodes.forEach(node => node.visible = false)
+        } else if (printable.instruction.type === "print") {
+          const nodes = nodesByPrintable.get(printable)
+          const materialOverride = $printableMaterialOverride[printable.id]
+          const materialFromRole = $colorRoleToMaterial[printable.instruction.color]
+
+          nodes.forEach(node => paint(node, materialOverride || materialFromRole))
+        }
+      })
+      console.timeEnd("Repainting")
+    }
+
+    let scheduled = undefined
+    function scheduleRepaint() {
+      scheduled ??= globalThis.requestAnimationFrame(() => {
+        repaint()
+        scheduled = undefined
+      })
+    }
+
+    console.time("Painting all overrides")
+    repaint()
+    colorRoleToMaterial.subscribe(scheduleRepaint)
+    printableMaterialOverride.subscribe(scheduleRepaint)
+    console.timeEnd("Painting all overrides")
 
     console.time("Compiling model")
     await this.renderer.compileAsync(model, this.camera, this.scene)

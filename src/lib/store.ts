@@ -21,3 +21,9 @@ export const colorRoleToMaterial = persistentMap<Record<ColorRole, Material>>("c
 export function setColorRoleMaterial(color: ColorRole, material: Material) {
   colorRoleToMaterial.setKey(color, material)
 }
+
+export const printableMaterialOverride = persistentMap<Record<string, Material>>("printable-material-override:", {}, new MaterialEncoder())
+
+export function setPrintableMaterialOverride(id: string, material: Material | undefined) {
+  printableMaterialOverride.setKey(id, material)
+}
