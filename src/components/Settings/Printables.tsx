@@ -52,7 +52,7 @@ function Printable({ printable }: { printable: Printable }) {
   }
 
   const material = $printableMaterialOverride[printable.id]
-  const value = material && id(material)
+  const value = material ? id(material) : ""
 
   return (<li className="flex flex-row place-content-center place-items-end border-b">
     <span className="flex-grow">{printable.stl} (#{printable.id})</span>
