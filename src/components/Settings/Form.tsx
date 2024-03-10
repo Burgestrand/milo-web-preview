@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useStore } from '@nanostores/react'
 import type { ColorRole } from '@lib/config'
 import { colorRoles, colorRoleTitles } from '@lib/config'
-import { colorRoleToMaterial, setColorRoleMaterial } from '@lib/store'
+import { colorRoleToMaterial } from '@lib/store'
 import type { ID as MaterialID } from '@lib/materials'
 import { default as materials, findById, id } from '@lib/materials'
 
@@ -16,11 +16,11 @@ function Select({ name, ...props }) {
 }
 
 function Hydrated() {
-  const $colorRoleToMaterial = useStore(colorRoleToMaterial)
+  const $colorRoleToMaterial = useStore(colorRoleToMaterial.store)
 
   const handleColorChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const material = findById(event.target.value as MaterialID)
-    setColorRoleMaterial(event.target.name as ColorRole, material)
+    colorRoleToMaterial.set(event.target.name as ColorRole, material)
   }, [])
 
   return colorRoles.map((colorRole) => (

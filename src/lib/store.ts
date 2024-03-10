@@ -12,18 +12,28 @@ export type { ColorRole }
 
 import MaterialEncoder from "./store/MaterialEncoder"
 
-export const colorRoleToMaterial = persistentMap<Record<ColorRole, Material>>("color-roles:", {
-  primary: materials.black,
-  accent: materials.blue,
-  tpu: materials.turqoise
-}, new MaterialEncoder())
+export const colorRoleToMaterial = {
+  store: persistentMap<Record<ColorRole, Material>>("color-roles:", {
+    primary: materials.black,
+    accent: materials.ratRigGreen,
+    tpu: materials.black
+  }, new MaterialEncoder()),
 
-export function setColorRoleMaterial(color: ColorRole, material: Material) {
-  colorRoleToMaterial.setKey(color, material)
+  set(role: ColorRole, material: Material) {
+    this.store.setKey(role, material)
+  },
+
+  get(colorRole: ColorRole): Material {
+    return this.store.get()[colorRole] ?? materials.white
+  }
 }
 
-export const printableMaterialOverride = persistentMap<Record<string, Material>>("printable-material-override:", {}, new MaterialEncoder())
-
-export function setPrintableMaterialOverride(id: string, material: Material | undefined) {
-  printableMaterialOverride.setKey(id, material)
+export const printableMaterialOverride = {
+  store: persistentMap<Record<string, Material>>("printable-material-override:", {}, new MaterialEncoder()),
+  set(id: string, material: Material | undefined) {
+    return this.store.setKey(id, material)
+  },
+  get(id: string): Material | undefined {
+    return this.store.get()[id]
+  }
 }

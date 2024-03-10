@@ -15,25 +15,32 @@ function load(data = hash()) {
   if (data === "") return Object.create(null);
 
   try {
+    console.time("URLPersistenceEngine#load")
     const decoded = decodeURIComponent(data)
     const uncrushed = JSONCrush.uncrush(decoded)
     const parsed = JSON.parse(uncrushed)
+    console.timeEnd("URLPersistenceEngine#load")
     return parsed
   } catch (e) {
     console.error("Unable to load choices from URI", e)
     return Object.create(null)
+  } finally {
   }
 }
 
 function dump(state) {
   if (typeof window === "undefined") return;
 
+  console.time("URLPersistenceEngine#dump")
   const json = JSON.stringify(state)
+  console.time("JSONCrush.crush")
   const crushed = JSONCrush.crush(json)
+  console.timeEnd("JSONCrush.crush")
   const encoded = encodeURIComponent(crushed)
   const currentUrl = new URL(window.location.toString())
   const newUrl = new URL(window.location.toString())
   newUrl.hash = encoded
+  console.timeEnd("URLPersistenceEngine#dump")
 
   if (currentUrl.toString() === newUrl.toString()) return;
 

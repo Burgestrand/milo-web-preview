@@ -141,8 +141,6 @@ export default class Renderer {
 
     function repaint() {
       console.time("Repainting")
-      const $colorRoleToMaterial = colorRoleToMaterial.get()
-      const $printableMaterialOverride = printableMaterialOverride.get()
 
       printables.forEach((printable) => {
         const nodes = nodesByPrintable.get(printable)
@@ -151,10 +149,12 @@ export default class Renderer {
           nodes.forEach(node => node.visible = false)
         } else if (printable.instruction.type === "print") {
           const nodes = nodesByPrintable.get(printable)
-          const materialOverride = $printableMaterialOverride[printable.id]
-          const materialFromRole = $colorRoleToMaterial[printable.instruction.color]
+          const materialOverride = printableMaterialOverride.get(printable.id)
+          const materialFromRole = colorRoleToMaterial.get(printable.instruction.color)
+          const material = materialOverride || materialFromRole
+          material.envMap = scene.environment
 
-          nodes.forEach(node => paint(node, materialOverride || materialFromRole))
+          nodes.forEach(node => paint(node, material))
         }
       })
       console.timeEnd("Repainting")
@@ -169,9 +169,8 @@ export default class Renderer {
     }
 
     console.time("Painting all overrides")
-    repaint()
-    colorRoleToMaterial.subscribe(scheduleRepaint)
-    printableMaterialOverride.subscribe(scheduleRepaint)
+    colorRoleToMaterial.store.subscribe(scheduleRepaint)
+    printableMaterialOverride.store.subscribe(scheduleRepaint)
     console.timeEnd("Painting all overrides")
 
     console.time("Compiling model")

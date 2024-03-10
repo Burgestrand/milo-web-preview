@@ -1,92 +1,38 @@
 import * as THREE from 'three'
 
-export type Material = THREE.Material
+export type Material = THREE.MeshPhysicalMaterial
 export type ID = string
 
-const materials: Record<ID, Material> = Object.assign(Object.create(null), {
-  neonGreen: new THREE.MeshStandardMaterial({
-    name: "Neon Green",
-    color: 0x00FF00,
-    roughness: 0.4,
-    metalness: 0.2,
-    userData: { id: "neonGreen" }
-  }),
-  neonOrange: new THREE.MeshStandardMaterial({
-    name: "Neon Orange",
-    color: 0xFF8500,
-    roughness: 0.7,
-    metalness: 0.1,
-    userData: { id: "neonOrange", }
-  }),
-  neonPink: new THREE.MeshStandardMaterial({
-    name: "Neon Pink",
-    color: 0xFF69B4,
-    roughness: 0.4,
-    metalness: 0.2,
-    userData: { id: "neonPink" }
-  }),
-  neonYellow: new THREE.MeshStandardMaterial({
-    name: "Neon Yellow",
-    color: 0xDDFF00,
-    roughness: 0.9,
-    metalness: 0.05,
-    userData: { id: "neonYellow" }
-  }),
-  blue: new THREE.MeshPhysicalMaterial({
-    name: "Blue",
-    color: 0x1166dd,
-    metalness: 0.05,
-    roughness: 0.8,
-    reflectivity: 0.1,
-    clearcoat: 0.0,
-    clearcoatRoughness: 0.7,
-    userData: { id: "blue" }
-  }),
-  red: new THREE.MeshStandardMaterial({
-    name: "Red",
-    color: 0xff5555,
-    roughness: 0.4,
-    metalness: 0.2,
-    userData: { id: "red" }
-  }),
-  lightBlue: new THREE.MeshStandardMaterial({
-    name: "Light Blue",
-    color: 0x66aaff,
-    roughness: 0.4,
-    metalness: 0.2,
-    userData: { id: "lightBlue" }
-  }),
-  turqoise: new THREE.MeshStandardMaterial({
-    name: "Turqoise",
-    color: 0x00FFFF,
-    roughness: 0.4,
-    metalness: 0.2,
-    userData: { id: "turqoise" }
-  }),
-  purple: new THREE.MeshStandardMaterial({
-    name: "Purple",
-    color: 0x703A92,
-    roughness: 0.4,
-    metalness: 0.2,
-    userData: { id: "purple" }
-  }),
-  white: new THREE.MeshStandardMaterial({
-    name: "White",
-    color: 0xeeeeee,
-    roughness: 0.4,
-    metalness: 0.2,
-    userData: { id: "white" }
-  }),
-  black: new THREE.MeshPhysicalMaterial({
-    name: "Black",
-    color: 0x444444,
-    roughness: 0.8,
-    metalness: 0.05,
-    clearcoat: 0.0,
-    clearcoatRoughness: 0.7,
-    userData: { id: "black" }
-  })
-})
+const materials: Record<ID, Material> = Object.create(null)
+
+type MaterialParameters = THREE.MeshPhysicalMaterialParameters
+type RegisterMaterial = MaterialParameters
+                      & Required<Pick<MaterialParameters, "name" | "color">>
+
+function register(id: ID, params: RegisterMaterial) {
+  params.roughness ??= 0.8
+  params.metalness ??= 0
+  params.envMapIntensity ??= 1
+  params.userData ??= Object.create(null)
+  params.userData.id = id
+
+  materials[id] = new THREE.MeshPhysicalMaterial(params)
+}
+
+register("anthracite", { name: "Anthracite", color: 0x373e42 })
+register("black", { name: "Black", color: 0x333333 })
+register("grey", { name: "Grey", color: 0xb4b4b4 })
+register("lightBlue", { name: "Light Blue", color: 0x4993ff })
+register("makitaBlue", { name: "Makita Blue", color: 0x3e8ea5 })
+register("neonPink", { name: "Neon Pink", color: 0xFF69B4 })
+register("orange", { name: "Orange", color: 0xfe7700 })
+register("purple", { name: "Purple", color: 0x783fa4 })
+register("red", { name: "Red", color: 0xd22b37 })
+register("silver", { name: "Silver", color: 0xb0b3bc, metalness: 0.2, roughness: 0.4 })
+register("steelBlue", { name: "Steel Blue", color: 0x3c5c97 })
+register("white", { name: "White", color: 0xf3f0e9 })
+register("neonYellow", { name: "Neon Yellow", color: 0xf3fe00 })
+register("ratRigGreen", { name: "Rat Rig Green", color: 0xa7fa00 })
 
 export default materials
 

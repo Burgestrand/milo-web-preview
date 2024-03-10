@@ -6,7 +6,7 @@ import { colorRoleTitles } from "@lib/config"
 import printables, { instructions } from "@lib/printables"
 import type { Instruction, Printable } from "@lib/printables"
 
-import { colorRoleToMaterial, printableMaterialOverride, setPrintableMaterialOverride } from "@lib/store"
+import { colorRoleToMaterial, printableMaterialOverride } from "@lib/store"
 
 import type { ID as MaterialID } from '@lib/materials'
 import { default as materials, findById, id } from "@lib/materials"
@@ -25,7 +25,7 @@ printables.forEach((printable) => {
 printablesByInstruction.delete(instructions.hide)
 
 function Color({ color }: { color: string }) {
-  const $colorRoleToMaterial = useStore(colorRoleToMaterial)
+  const $colorRoleToMaterial = useStore(colorRoleToMaterial.store)
   const [hydrated, setHydrated] = useState(false)
   useEffect(() => { setHydrated(true) }, [])
 
@@ -37,14 +37,14 @@ function Color({ color }: { color: string }) {
 }
 
 function Printable({ printable }: { printable: Printable }) {
-  const $printableMaterialOverride = useStore(printableMaterialOverride)
+  const $printableMaterialOverride = useStore(printableMaterialOverride.store)
   const [hydrated, setHydrated] = useState(false)
   useEffect(() => { setHydrated(true) }, [])
 
   const handleMaterialChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const materialId = event.target.value as MaterialID
     const material = materialId === "" ? undefined : findById(materialId)
-    setPrintableMaterialOverride(printable.id, material)
+    printableMaterialOverride.set(printable.id, material)
   }, [printable.id])
 
   if (!hydrated) {
