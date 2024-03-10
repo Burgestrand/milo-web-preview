@@ -55,7 +55,7 @@ function Printable({ printable }: { printable: Printable }) {
   const value = material ? id(material) : ""
 
   return (<li className="flex flex-row place-content-center place-items-end border-b">
-    <span className="flex-grow">{printable.stl} (#{printable.id})</span>
+    <span className="flex-grow">{printable.stl}</span>
     <select name={printable.id} value={value} onChange={handleMaterialChange} className="rounded-md text-sm py-1 px-2 bg-transparent text-white border-none">
       <option value="">(Default)</option>
       {Object.values(materials).map((material) => <option key={id(material)} value={id(material)}>{material.name}</option>)}
