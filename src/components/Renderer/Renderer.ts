@@ -33,7 +33,7 @@ export default class Renderer {
     this.scene = new THREE.Scene()
     this.scene.background = new THREE.Color(0x000000)
 
-    this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000)
+    this.camera = new THREE.PerspectiveCamera(75, 1, 0.01, 1000)
     this.camera.position.z = 0.5
     this.camera.position.y = 0.5
     this.camera.position.x = 0.5
