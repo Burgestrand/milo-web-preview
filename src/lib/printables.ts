@@ -4,18 +4,20 @@ export type Instruction =
   { type: "print", color: ColorRole } |
   { type: "hide" }
 
-type ObjectPath = string
+export type ObjectPath = [NodeName, ...PathSegment[]]
+export type NodeName = string
+export type PathSegment = NodeName | { type: string }
 
 export type Printable = {
   id: string
 
-  instruction: Instruction
-
   // A single thing might have multiple model paths, e.g. a mirrored part.
-  path: ObjectPath[]
+  path: ObjectPath
 
   // Not strictly needed, but makes it easier to double-check.
   stl: string
+
+  instruction: Instruction
 }
 
 export const instructions: {

@@ -6,6 +6,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 
 import MeshoptDecoder from 'meshoptimizer/meshopt_decoder'
 
+import type { ObjectPath } from '@lib/printables'
 import type { Printable } from '@lib/printables'
 import printables from '@lib/printables'
 import { colorRoleToMaterial, printableMaterialOverride } from '@lib/store'
@@ -18,7 +19,7 @@ export default class Renderer {
   controls: OrbitControls
   resizeObserver: ResizeObserver
 
-  camera: THREE.Camera = new THREE.PerspectiveCamera(75, 1, 0.01, 1000)
+  camera = new THREE.PerspectiveCamera(75, 1, 0.01, 1000)
   scene = new THREE.Scene()
   loader = new GLTFLoader()
 
@@ -57,7 +58,7 @@ export default class Renderer {
     this.camera.updateProjectionMatrix()
   }
 
-  #dig(root, path) {
+  #dig(root, path: ObjectPath) {
     return path.slice(1).reduce((nodes, segment) =>
       nodes.flatMap(node => node.children.filter(node => node.name === segment))
   , [root])
@@ -81,10 +82,10 @@ export default class Renderer {
     console.timeEnd(timer)
 
     const printablesByRoot = Array.from(printables.values()).reduce((tree, printable) => {
-      const segment = printable.path[0]
-      const list = tree.get(segment) || []
+      const name = printable.path[0]
+      const list = tree.get(name) || []
       list.push(printable)
-      return tree.set(segment, list)
+      return tree.set(name, list)
     }, new Map<string, Printable[]>())
     const nodesByPrintable = new Map(Array.from(printables.values()).map(printable => [printable, []]))
 
