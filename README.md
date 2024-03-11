@@ -4,6 +4,7 @@
 >
 > I'm ordering filament *really soon* so I wanted something *very quick and dirty* just to play around. There are loads of improvements to be done just about everywhere.
 
+* Hosted at https://www.burgestrand.se/milo-web-preview/
 * Built with [Astro](https://astro.build).
 * See [Millennium Machines](https://github.com/MillenniumMachines/) and [Milo v1.5](https://github.com/MillenniumMachines/Milo-v1.5).
 
