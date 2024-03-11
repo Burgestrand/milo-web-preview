@@ -15,7 +15,7 @@ import MaterialEncoder from "./store/MaterialEncoder"
 export const colorRoleToMaterial = {
   store: persistentMap<Record<ColorRole, Material>>("color-roles:", {
     primary: materials.black,
-    accent: materials.ratRigGreen,
+    accent: materials.red,
     tpu: materials.black
   }, new MaterialEncoder()),
 
