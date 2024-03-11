@@ -4,7 +4,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 
-import type { ColorRole } from "@lib/config"
+import MeshoptDecoder from 'meshoptimizer/meshopt_decoder'
+
 import type { Printable } from '@lib/printables'
 import printables from '@lib/printables'
 import { colorRoleToMaterial, printableMaterialOverride } from '@lib/store'
@@ -14,10 +15,12 @@ export type RendererProgressEvent = CustomEvent<ProgressEvent>
 export default class Renderer {
   model: string
   renderer: THREE.WebGLRenderer
-  scene: THREE.Scene
-  camera: THREE.PerspectiveCamera
   controls: OrbitControls
   resizeObserver: ResizeObserver
+
+  camera: THREE.Camera = new THREE.PerspectiveCamera(75, 1, 0.01, 1000)
+  scene = new THREE.Scene()
+  loader = new GLTFLoader()
 
   constructor({ model, canvas }) {
     this.model = model
@@ -30,10 +33,8 @@ export default class Renderer {
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping
     this.renderer.toneMappingExposure = 0.5
 
-    this.scene = new THREE.Scene()
-    this.scene.background = new THREE.Color(0x000000)
+    this.scene.background = new THREE.Color(0xAAAAAA)
 
-    this.camera = new THREE.PerspectiveCamera(75, 1, 0.01, 1000)
     this.camera.position.z = 0.5
     this.camera.position.y = 0.5
     this.camera.position.x = 0.5
@@ -69,11 +70,6 @@ export default class Renderer {
     const environment = new RoomEnvironment(renderer)
     const pmremGenerator = new THREE.PMREMGenerator(renderer)
     scene.environment = pmremGenerator.fromScene(environment).texture
-
-    // Add a grid
-    const grid = new THREE.GridHelper(100, 100, 0x0000ff, 0x808080)
-    grid.position.y = -0.1
-    scene.add(grid)
 
     const timer = `Loading ${this.model}...`
     console.time(timer)
@@ -194,7 +190,7 @@ export default class Renderer {
 
   #load(model: string, onProgress?: (event: ProgressEvent) => void): Promise<GLTF> {
     return new Promise((resolve, reject) => {
-      new GLTFLoader().load(model, resolve, onProgress, reject)
+      this.loader.load(model, resolve, onProgress, reject)
     })
   }
 }
