@@ -4,8 +4,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 
-import MeshoptDecoder from 'meshoptimizer/meshopt_decoder'
-
 import type { ObjectPath } from '@lib/printables'
 import type { Printable } from '@lib/printables'
 import printables from '@lib/printables'
