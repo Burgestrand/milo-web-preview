@@ -8,6 +8,26 @@
 * Built with [Astro](https://astro.build).
 * See [Millennium Machines](https://github.com/MillenniumMachines/) and [Milo v1.5](https://github.com/MillenniumMachines/Milo-v1.5).
 
+## Developing
+
+It's built using [Astro](https://astro.build), which you can refer to for guidance.
+
+You need [git lfs](https://git-lfs.com), since the CAD-file is stored in this repository using it.
+
+```
+asdf install
+npm install
+npm run dev
+```
+
+### Re-exporting the CAD
+
+1. Open the [CAD](https://github.com/MillenniumMachines/Milo-v1.5/tree/main/CAD) step file in Fusion 360.
+2. Export the CAD from Fusion 360 to an FBX file.
+3. Import the FBX in Blender.
+4. Export the FBX from Blender to GLB.
+5. Add the GLB to `public/CAD.glb`.
+
 ## Contributing
 
 It's probably rather difficult to contribute to this repository due to:
