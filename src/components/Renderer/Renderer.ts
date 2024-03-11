@@ -34,14 +34,12 @@ export default class Renderer {
 
     this.scene.background = new THREE.Color(0xAAAAAA)
 
-    this.camera.position.z = 0.5
-    this.camera.position.y = 0.5
-    this.camera.position.x = 0.5
-    this.camera.lookAt(0, 0, 0)
+    this.camera.position.z = 0.4
+    this.camera.position.y = 0.4
+    this.camera.position.x = 0.4
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement)
     this.controls.addEventListener('change', this.#render)
-    this.controls.target.set(0, 0, 0)
 
     this.resizeObserver = new ResizeObserver(this.resized)
     this.resizeObserver.observe(canvas)
@@ -173,9 +171,17 @@ export default class Renderer {
     console.timeEnd("Compiling model")
 
     this.scene.add(model)
+    this.#lookAt(model)
 
     console.groupEnd()
     this.#animate()
+  }
+
+  #lookAt(model) {
+    const box = new THREE.Box3().setFromObject(model)
+    box.getCenter(this.controls.target)
+    this.controls.target.y *= 0.5
+    this.controls.update()
   }
 
   #animate = () => {
