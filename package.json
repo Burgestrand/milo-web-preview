@@ -7,7 +7,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "optimize": "gltfpack -i public/FreeCAD.glb -o public/CAD.glb -cc -kn"
   },
   "dependencies": {
     "@astrojs/react": "^3.0.10",
@@ -19,7 +20,9 @@
     "@types/react-dom": "^18.2.19",
     "@types/three": "^0.161.2",
     "astro": "^4.4.4",
+    "gltfpack": "^0.20.0",
     "jsoncrush": "^1.1.8",
+    "meshoptimizer": "^0.20.0",
     "nanostores": "^0.10.0",
     "obj2gltf": "^3.1.6",
     "react": "^18.2.0",

@@ -1,8 +1,10 @@
 import * as THREE from 'three'
-import type { GLTF } from 'three/addons/loaders/GLTFLoader.js'
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
+
+import type { GLTF } from 'three/addons/loaders/GLTFLoader.js'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { MeshoptDecoder } from "meshoptimizer"
 
 import type { ObjectPath } from '@lib/printables'
 import type { Printable } from '@lib/printables'
@@ -22,6 +24,8 @@ export default class Renderer {
   loader = new GLTFLoader()
 
   constructor({ model, canvas }) {
+    this.loader.setMeshoptDecoder(MeshoptDecoder)
+
     this.model = model
     this.renderer = new THREE.WebGLRenderer({
       canvas,
@@ -29,10 +33,6 @@ export default class Renderer {
     })
     this.renderer.outputColorSpace = THREE.SRGBColorSpace
     this.renderer.setPixelRatio(window.devicePixelRatio)
-    this.renderer.toneMapping = THREE.ACESFilmicToneMapping
-    this.renderer.toneMappingExposure = 0.5
-
-    this.scene.background = new THREE.Color(0xAAAAAA)
 
     this.camera.position.z = 0.4
     this.camera.position.y = 0.4
@@ -54,8 +54,8 @@ export default class Renderer {
     this.camera.updateProjectionMatrix()
   }
 
-  #dig(root, path: ObjectPath) {
-    return path.slice(1).reduce((nodes, segment) =>
+  #dig(root: THREE.Object3D, path: ObjectPath) {
+    return path.slice(1).reduce((nodes, segment): THREE.Object3D[] =>
       nodes.flatMap(node => node.children.filter(node => node.name === segment))
   , [root])
   }
@@ -64,9 +64,7 @@ export default class Renderer {
     console.group("Renderer#start")
     const { renderer, scene } = this
 
-    const environment = new RoomEnvironment(renderer)
-    const pmremGenerator = new THREE.PMREMGenerator(renderer)
-    scene.environment = pmremGenerator.fromScene(environment).texture
+    this.#lighting()
 
     const timer = `Loading ${this.model}...`
     console.time(timer)
@@ -86,6 +84,8 @@ export default class Renderer {
     const nodesByPrintable = new Map(Array.from(printables.values()).map(printable => [printable, []]))
 
     const model = gltf.scene
+    // Rotate 90 degrees around the X axis.
+    model.rotation.x = Math.PI / 2
 
     // Find all nodes for each printable.
     console.time("Finding nodes for printables")
@@ -95,20 +95,18 @@ export default class Renderer {
         return
       }
 
-      const nodes = candidates.flatMap((printable) => {
+      const matches = candidates.flatMap((printable) => {
         const leaves = this.#dig(node, printable.path)
         if (leaves.length !== 1) console.warn("Weird leaves", printable, leaves)
 
         return { printable, nodes: leaves }
       })
 
-      if (nodes.length === 0) {
-        console.error(`No matches found for ${node.name}`, candidates, node)
-      } else if (nodes.length > 1) {
-        console.warn(`Multiple matches found for ${node.name}`, candidates, node, nodes)
+      if (matches.length === 0) {
+        console.error(`No matches found for ${node.name}`, node, candidates)
       }
 
-      nodes.forEach(({ printable, nodes }) => {
+      matches.forEach(({ printable, nodes }) => {
         nodesByPrintable.get(printable).push(...nodes)
       })
     })
@@ -122,15 +120,6 @@ export default class Renderer {
         console.warn(`Multiple nodes found for ${printable.path}`)
       }
     })
-
-    function paint(node, material) {
-      node.children.forEach((child) => {
-        if (child.type === "Mesh") {
-          const mesh = child as THREE.Mesh
-          mesh.material = material
-        }
-      })
-    }
 
     function repaint() {
       console.time("Repainting")
@@ -147,16 +136,17 @@ export default class Renderer {
           const material = materialOverride || materialFromRole
           material.envMap = scene.environment
 
-          nodes.forEach(node => paint(node, material))
+          const painted = nodes.flatMap(node => this.#paint(node, material))
+          if (painted.length !== 1) console.warn("Painting anomaly", printable, nodes, painted)
         }
       })
       console.timeEnd("Repainting")
     }
 
     let scheduled = undefined
-    function scheduleRepaint() {
+    let scheduleRepaint = () => {
       scheduled ??= globalThis.requestAnimationFrame(() => {
-        repaint()
+        repaint.call(this)
         scheduled = undefined
       })
     }
@@ -191,6 +181,27 @@ export default class Renderer {
 
   #render = () => {
     this.renderer.render(this.scene, this.camera)
+  }
+
+  #lighting() {
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping
+    this.renderer.toneMappingExposure = 1
+
+    const environment = new RoomEnvironment(this.renderer)
+    const pmremGenerator = new THREE.PMREMGenerator(this.renderer)
+    const texture = pmremGenerator.fromScene(environment).texture
+    this.scene.environment = texture
+    this.scene.background = new THREE.Color(0xAAAAAA)
+  }
+
+  #paint(node, material) {
+    const meshes: THREE.Mesh[] = node.getObjectsByProperty("type", "Mesh")
+    meshes.forEach(mesh => {
+      mesh.material = material
+      material.envMap = this.scene.environment
+      material.needsUpdate = true
+    })
+    return meshes
   }
 
   #load(model: string, onProgress?: (event: ProgressEvent) => void): Promise<GLTF> {

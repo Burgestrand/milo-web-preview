@@ -12,7 +12,7 @@ type RegisterMaterial = MaterialParameters
 function register(id: ID, params: RegisterMaterial) {
   params.roughness ??= 0.8
   params.metalness ??= 0
-  params.envMapIntensity ??= 1
+  params.envMapIntensity ??= 0.4
   params.userData ??= Object.create(null)
   params.userData.id = id
 
