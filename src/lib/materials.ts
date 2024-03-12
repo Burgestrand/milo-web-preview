@@ -33,6 +33,8 @@ register("steelBlue", { name: "Steel Blue", color: 0x304262 })
 register("white", { name: "White", color: 0xe3e0d4 })
 register("neonYellow", { name: "Neon Yellow", color: 0xdbf415 })
 register("ratRigGreen", { name: "Rat Rig Green", color: 0x8fe106 })
+register("popGreen", { name: "Pop Green", color: 0x3cee2a})
+register("popPink", { name: "Pop Pink", color: 0xea4e8e})
 
 export default materials
 
