@@ -47,7 +47,7 @@ export default class Renderer {
 
   resized = ([entry]) => {
     const { width, height } = entry.contentRect
-    this.renderer.setSize(width, height)
+    this.renderer.setSize(width, height, false)
 
     const aspectRatio = width / height
     this.camera.aspect = aspectRatio
