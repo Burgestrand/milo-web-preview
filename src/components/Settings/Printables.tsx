@@ -36,10 +36,8 @@ function Color({ color }: { color: string }) {
   return (<span>({$colorRoleToMaterial[color].name})</span>)
 }
 
-function Printable({ printable }: { printable: Printable }) {
+function PrintableMaterialSelect({ printable }: { printable: Printable }) {
   const $printableMaterialOverride = useStore(printableMaterialOverride.store)
-  const [hydrated, setHydrated] = useState(false)
-  useEffect(() => { setHydrated(true) }, [])
 
   const handleMaterialChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const materialId = event.target.value as MaterialID
@@ -47,19 +45,36 @@ function Printable({ printable }: { printable: Printable }) {
     printableMaterialOverride.set(printable.id, material)
   }, [printable.id])
 
-  if (!hydrated) {
-    return null
-  }
-
   const material = $printableMaterialOverride[printable.id]
-  const value = material ? id(material) : ""
+  const value = material && id(material)
+  const Custom = (() => {
+    if (!material) return null;
+    if (materials[id(material)] !== undefined) return null;
+    return (<option value={id(material)}>Custom: {material.name}</option>)
+  })()
+
+  return (
+    <select name={printable.id} value={value} onChange={handleMaterialChange} className="text-right rounded-md text-sm py-1 px-2 pr-8 bg-transparent text-white border-none">
+      <option value="">(Default)</option>
+      {Custom}
+      {Object.values(materials).map((material) => <option key={id(material)} value={id(material)}>{material.name}</option>)}
+    </select>
+  )
+}
+
+function Printable({ printable }: { printable: Printable }) {
+  const [hydrated, setHydrated] = useState(false)
+  useEffect(() => { setHydrated(true) }, [])
+
+  const Select = hydrated ? <PrintableMaterialSelect printable={printable} /> : (
+    <select className="rounded-md text-sm py-1 px-2 pr-8 bg-transparent text-white border-none" disabled>
+      <option>Loading...</option>
+    </select>
+  )
 
   return (<li className="flex flex-row place-content-center place-items-end border-b">
     <span className="flex-grow">{printable.stl}</span>
-    <select name={printable.id} value={value} onChange={handleMaterialChange} className="rounded-md text-sm py-1 px-2 bg-transparent text-white border-none">
-      <option value="">(Default)</option>
-      {Object.values(materials).map((material) => <option key={id(material)} value={id(material)}>{material.name}</option>)}
-    </select>
+    {Select}
   </li>)
 }
 

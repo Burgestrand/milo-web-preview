@@ -26,10 +26,11 @@ function ColorRoleSelect({ colorRole }) {
   const material = $colorRoleToMaterial[colorRole]
   const custom = materials[id(material)] === undefined
 
+  const value = id(material)
   const Custom = custom ? <option value={id(material)}>Custom: {material.name}</option> : null
 
   return (
-    <Select key={colorRole} name={colorRole} value={id($colorRoleToMaterial[colorRole])} onChange={handleColorChange}>
+    <Select key={colorRole} name={colorRole} value={value} onChange={handleColorChange}>
       {Custom}
       {Object.values(materials).map((material) => <option key={id(material)} value={id(material)}>{material.name}</option>)}
     </Select>
