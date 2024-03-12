@@ -13,8 +13,8 @@ const reset = `location.href = '${baseURL}'`
 </div>
 
 <script>
-  const input = document.querySelector('#share')
-  input.addEventListener('click', (e) => e.target.select())
+  const input: HTMLInputElement = document.querySelector('#share')
+  input.addEventListener('click', e => (e.target as typeof input).select())
 
   // Poll for URL changes.
   function poll() {
