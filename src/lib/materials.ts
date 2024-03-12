@@ -38,6 +38,9 @@ register(undefined, { name: "3DO Steel Blue", color: 0x304262 })
 register(undefined, { name: "3DO White", color: 0xe3e0d4 })
 register(undefined, { name: "3DO Neon Yellow", color: 0xdbf415 })
 register(undefined, { name: "3DO Rat Rig Green", color: 0x8fe106 })
+register(undefined, { name: "Polymaker Pop Green", color: 0x3cee2a})
+register(undefined, { name: "Polymaker Pop Pink", color: 0xea4e8e})
+
 
 export default materials
 
