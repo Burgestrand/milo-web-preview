@@ -15,19 +15,29 @@ function Select({ name, ...props }) {
   )
 }
 
-function Hydrated() {
+function ColorRoleSelect({ colorRole }) {
   const $colorRoleToMaterial = useStore(colorRoleToMaterial.store)
 
   const handleColorChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const material = findById(event.target.value as MaterialID)
-    colorRoleToMaterial.set(event.target.name as ColorRole, material)
-  }, [])
+    colorRoleToMaterial.set(colorRole, material)
+  }, [colorRole])
 
-  return colorRoles.map((colorRole) => (
+  const material = $colorRoleToMaterial[colorRole]
+  const custom = materials[id(material)] === undefined
+
+  const Custom = custom ? <option value={id(material)}>Custom: {material.name}</option> : null
+
+  return (
     <Select key={colorRole} name={colorRole} value={id($colorRoleToMaterial[colorRole])} onChange={handleColorChange}>
+      {Custom}
       {Object.values(materials).map((material) => <option key={id(material)} value={id(material)}>{material.name}</option>)}
     </Select>
-  ))
+  )
+}
+
+function Hydrated() {
+  return colorRoles.map((colorRole) => (<ColorRoleSelect key={colorRole} colorRole={colorRole} />))
 }
 
 function Hydrating() {
