@@ -24,7 +24,6 @@ function register(id: string | undefined, params: MaterialParameters) {
   materials[id] = new THREE.MeshPhysicalMaterial(params)
 }
 
-
 register(undefined, { name: "3DO Anthracite", color: 0x45494c })
 register("black", { name: "3DO Black", color: 0x222222 })
 register(undefined, { name: "3DO Grey", color: 0xaea89c })
