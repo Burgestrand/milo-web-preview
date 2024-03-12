@@ -22,11 +22,9 @@ npm run dev
 
 ### Re-exporting the CAD
 
-1. Open the [CAD](https://github.com/MillenniumMachines/Milo-v1.5/tree/main/CAD) step file in Fusion 360.
-2. Export the CAD from Fusion 360 to an FBX file.
-3. Import the FBX in Blender.
-4. Export the FBX from Blender to GLB.
-5. Add the GLB to `public/CAD.glb`.
+1. Open the [CAD](https://github.com/MillenniumMachines/Milo-v1.5/tree/main/CAD) step file in FreeCAD.
+2. Export the CAD to `public/FreeCAD.glb`.
+3. Run `npm run optimize`
 
 ## Contributing
 
